@@ -1418,7 +1418,7 @@ preferred, this draft provides a mechanism for the client to directly interact
 with the user. This requires a high degree of trust between the authorization server
 and the client, as there typically is for first-party applications.
 It should only be considered when there are usability
-concerns with a redirect-based approach, such as for native mobile or desktop applications a.<a href="#section-1-4" class="pilcrow">¶</a></p>
+concerns with a redirect-based approach, such as for native mobile or desktop applications.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">This draft also extends the token response (typically for use in response to a refresh token request) and resource server response to allow the authorization server or resource server to indicate that the client should re-request authorization from the user. This can include requesting step-up authentication by including parameters defined in <span>[<a href="#RFC9470" class="cite xref">RFC9470</a>]</span> as well.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <div id="usage-and-applicability">
 <section id="section-1.1">
@@ -1491,35 +1491,35 @@ and "Token Endpoint" defined by <span>[<a href="#RFC6749" class="cite xref">RFC6
         </h3>
 <div class="alignLeft art-ascii-art art-text artwork" id="section-3.1-1">
 <pre>
-                                                +-------------------+
-                                                |   Authorization   |
-                          (B)Native             |      Server       |
-             +----------+ Authorization Request |+-----------------+|
-(A)Client+---|  First-  |----------------------&gt;||     Native      ||
-   Starts|   |  Party   |                       ||  Authorization  ||
-   Flow  +--&gt;|  Client  |&lt;----------------------||    Endpoint     ||
-             |          | (C)Authorization      ||                 ||
-             |          |    Error Response     ||                 ||
-             |          |         :             ||                 ||
-             |          |         :             ||                 ||
-             |          | (D)Native             ||                 ||
-             |          | Authorization Request ||                 ||
-             |          |----------------------&gt;||                 ||
-             |          |                       ||                 ||
-             |          |&lt;----------------------||                 ||
-             |          | (E) Authorization     |+-----------------+|
-             |          |     Code Response     |                   |
-             |          |                       |                   |
-             |          |                       |                   |
-             |          |                       |                   |
-             |          | (F) Token             |                   |
-             |          |     Request           |+-----------------+|
-             |          |----------------------&gt;||      Token      ||
-             |          |                       ||     Endpoint    ||
-             |          |&lt;----------------------||                 ||
-             |          | (G) Access Token      |+-----------------+|
-             |          |                       |                   |
-             +----------+                       +-------------------+
+                                                +--------------------+
+                                                |   Authorization    |
+                          (B)Native             |      Servers       |
+             +----------+ Authorization Request |+------------------+|
+(A)Client+---|  First-  |----------------------&gt;||+----------------+||
+   Starts|   |  Party   |                       |||    Native      |||
+   Flow  +--&gt;|  Client  |&lt;----------------------||| Authorization  |||
+             |          | (C)Authorization      |||   Endpoint     |||
+             |          |    Error Response     |||                |||
+             |          |         :             |||                |||
+             |          |         :             |||                |||
+             |          | (D)Native             |||                |||
+             |          | Authorization Request |||                |||
+             |          |----------------------&gt;|||                |||
+             |          |                       |||                |||
+             |          |&lt;----------------------||+----------------+||
+             |          | (E) Authorization     |+------------------+|
+             |          |     Code Response     |                    |
+             |          |                       |                    |
+             |          |                       |                    |
+             |          |                       |                    |
+             |          | (F) Token             |                    |
+             |          |     Request           |+------------------+|
+             |          |----------------------&gt;||      Token       ||
+             |          |                       ||     Endpoint     ||
+             |          |&lt;----------------------||                  ||
+             |          | (G) Access Token      |+------------------+|
+             |          |                       |                    |
+             +----------+                       +--------------------+
 </pre><a href="#section-3.1-1" class="pilcrow">¶</a>
 </div>
 <p id="section-3.1-2">Figure: First-Party Client Authorization Code Request<a href="#section-3.1-2" class="pilcrow">¶</a></p>
@@ -1607,7 +1607,7 @@ server to indicate that further authentication of the user is required.<a href="
       <h2 id="name-authorization-initiation">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-authorization-initiation" class="section-name selfRef">Authorization Initiation</a>
       </h2>
-<p id="section-5-1">A client may wish to initiate an authorization flow by first prompting the user for their user identifier or other account information. The authorization challenge endpoint is a new endpoint to collect this login hint and direct the client with the next steps, whether that is to do an MFA flow, or perform an OAuth redirect-based flow.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">A client may wish to initiate an authorization flow by first prompting the user for their user identifier or other account information. The native authorization endpoint is a new endpoint to collect this login hint and direct the client with the next steps, whether that is to do an MFA flow, or perform an OAuth redirect-based flow.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <p id="section-5-2">In order to preserve the security of this specification, the Authorization Server <span class="bcp14">MUST</span> verify the "first-partyness" of the client before continuing with the authentication flow. Please see <a href="#first-party-applications" class="auto internal xref">Section 9.1</a> for additional considerations.<a href="#section-5-2" class="pilcrow">¶</a></p>
 <div id="challenge-request">
 <section id="section-5.1">
@@ -1680,7 +1680,7 @@ login_hint=%2B1-310-123-4567&amp;scope=profile
         <h3 id="name-native-authorization-respon">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-native-authorization-respon" class="section-name selfRef">Native Authorization Response</a>
         </h3>
-<p id="section-5.2-1">The authorization server determines whether the information provided up to this point is sufficient to issue an authorization code, and if so responds with an authorization code. If the information is not sufficient for issuing an authorization code, then the authorization server <span class="bcp14">MUST</span> respond with an error response s.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-1">The authorization server determines whether the information provided up to this point is sufficient to issue an authorization code, and if so responds with an authorization code. If the information is not sufficient for issuing an authorization code, then the authorization server <span class="bcp14">MUST</span> respond with an error response.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <div id="authorization-code-response">
 <section id="section-5.2.1">
           <h4 id="name-authorization-code-response">
