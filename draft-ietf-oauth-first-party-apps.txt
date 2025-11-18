@@ -563,9 +563,9 @@ Table of Contents
          Section 5.2.2.1 for details.
 
 "federated_response":
- :     The Authorization Server wishes to respond to an authorization server,
-       which has federated to it. This response MUST include the
-       *federated_native_request_uri* response parameter.
+ :     The Authorization Server wishes to respond to an authorization
+       server, which has federated to it. This response MUST include
+       the *federated_native_request_uri* response parameter.
        See {{federating-response}} for details.
 
  "redirect_to_web":
@@ -688,14 +688,14 @@ Content-Type: application/json
    authorization_code=uY29tL2F1dGhlbnRpY
    &state=xyz
 
-   Client SHALL include in an Allowlist the DNS domains of all
-   _federated_native_request_uri_ it encounters during each flow with
-   error code _federate_, to be used for validation in the response
+   Client SHALL compile during each flow an Allowlist of DNS domains of
+   all _federated_native_request_uri_ it encounters, which were returned
+   with error code _federate_, to be used for validation in the response
    handling phase, which is:
 
    *  After being invoked on its native_callback_uri, if provided.
 
-   *  After receiving the error code _federated_response_
+   *  After receiving the error code _federated_response_.
 
 5.2.2.2.  Additional Information Required Response
 

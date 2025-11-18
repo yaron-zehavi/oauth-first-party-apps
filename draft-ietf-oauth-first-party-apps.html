@@ -1797,9 +1797,9 @@ See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a
 <div class="alignLeft art-text artwork" id="section-5.2.2-3">
 <pre>
 "federated_response":
- :     The Authorization Server wishes to respond to an authorization server,
-       which has federated to it. This response MUST include the
-       *federated_native_request_uri* response parameter.
+ :     The Authorization Server wishes to respond to an authorization
+       server, which has federated to it. This response MUST include
+       the *federated_native_request_uri* response parameter.
        See {{federating-response}} for details.
 
  "redirect_to_web":
@@ -1942,13 +1942,13 @@ authorization_code=uY29tL2F1dGhlbnRpY
 &amp;state=xyz
 </pre><a href="#section-5.2.2.1-10" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-11">Client <span class="bcp14">SHALL</span> include in an Allowlist the DNS domains of all <em>federated_native_request_uri</em> it encounters during each flow with error code <em>federate</em>, to be used for validation in the response handling phase, which is:<a href="#section-5.2.2.1-11" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-11">Client <span class="bcp14">SHALL</span> compile during each flow an Allowlist of DNS domains of all <em>federated_native_request_uri</em> it encounters, which were returned with error code <em>federate</em>, to be used for validation in the response handling phase, which is:<a href="#section-5.2.2.1-11" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.2.2.1-12.1">
                 <p id="section-5.2.2.1-12.1.1">After being invoked on its native_callback_uri, if provided.<a href="#section-5.2.2.1-12.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-5.2.2.1-12.2">
-                <p id="section-5.2.2.1-12.2.1">After receiving the error code <em>federated_response</em><a href="#section-5.2.2.1-12.2.1" class="pilcrow">¶</a></p>
+                <p id="section-5.2.2.1-12.2.1">After receiving the error code <em>federated_response</em>.<a href="#section-5.2.2.1-12.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </section>
