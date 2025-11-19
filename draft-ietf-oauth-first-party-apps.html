@@ -1782,12 +1782,20 @@ determine the target authorization server to federate to.
 See <a href="#insufficient-information" class="auto internal xref">Section 5.2.2.3</a> for details.<a href="#section-5.2.2-2.2.2.14.1" class="pilcrow">¶</a></p>
 </dd>
                 <dd class="break"></dd>
-<dt id="section-5.2.2-2.2.2.15">"federate":</dt>
+<dt id="section-5.2.2-2.2.2.15">federated_response":</dt>
                 <dd style="margin-left: 1.5em" id="section-5.2.2-2.2.2.16">
-                  <p id="section-5.2.2-2.2.2.16.1">The Authorization Server wishes to federate processing to another
+                  <p id="section-5.2.2-2.2.2.16.1">The Authorization Server wishes to respond to an authorization
+server, which has federated to it. This response <span class="bcp14">MUST</span> include
+the <em>federated_native_request_uri</em> response parameter.
+See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2-2.2.2.16.1" class="pilcrow">¶</a></p>
+</dd>
+                <dd class="break"></dd>
+<dt id="section-5.2.2-2.2.2.17">"federate":</dt>
+                <dd style="margin-left: 1.5em" id="section-5.2.2-2.2.2.18">
+                  <p id="section-5.2.2-2.2.2.18.1">The Authorization Server wishes to federate processing to another
 authorization server, which it is a client of. This response <span class="bcp14">MUST</span>
 include the <em>federated_native_request_uri</em> response parameter.
-See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2-2.2.2.16.1" class="pilcrow">¶</a></p>
+See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2-2.2.2.18.1" class="pilcrow">¶</a></p>
 </dd>
               <dd class="break"></dd>
 </dl>
@@ -1796,13 +1804,7 @@ See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a
 </dl>
 <div class="alignLeft art-text artwork" id="section-5.2.2-3">
 <pre>
-"federated_response":
- :     The Authorization Server wishes to respond to an authorization
-       server, which has federated to it. This response MUST include
-       the *federated_native_request_uri* response parameter.
-       See {{federating-response}} for details.
-
- "redirect_to_app":
+""redirect_to_app":
  :     The Authorization Server wishes to fulfill the user interaction
        using another native app. This response MUST include the
        *federated_native_request_uri* response parameter.
