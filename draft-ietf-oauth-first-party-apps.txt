@@ -578,16 +578,16 @@ Table of Contents
          the user interacts with the authorization server in a web
          browser.  See Section 5.2.2.4 for details.
 
-"native_authorization_unsupported":
-:     The authorization server does not support the native authorization
-      endpoint, or does, but a downstream authorization server it attempted
-      to federate to, does not support the native authorization endpoint.
+      "native_authorization_unsupported":  The authorization server does
+         not support the native authorization endpoint, or does, but a
+         downstream authorization server it attempted to federate to,
+         does not support the native authorization endpoint.
 
- Values for the `error` parameter MUST NOT include characters
- outside the set %x20-21 / %x23-5B / %x5D-7E.
+      Values for the error parameter MUST NOT include characters outside
+      the set %x20-21 / %x23-5B / %x5D-7E.
 
- The authorization server MAY extend these error codes with custom
- messages based on the requirements of the authorization server.
+      The authorization server MAY extend these error codes with custom
+      messages based on the requirements of the authorization server.
 
    "error_description":  OPTIONAL.  Human-readable ASCII [USASCII] text
       providing additional information, used to assist the client
@@ -660,8 +660,8 @@ Content-Type: application/json
 {
     "error": "federate",
     "federated_native_request_uri": "https://next-as.com/native-redirect?
-    client_id=s6BhdRkqt3
-    &request_uri=urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+    client_id=s6BhdRkqt3&request_uri=
+    urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
 }
 
    Following which, the client calls _federated_native_request_uri_:

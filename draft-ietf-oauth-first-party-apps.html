@@ -1814,89 +1814,84 @@ should initiate a new authorization code flow so that the
 user interacts with the authorization server in a web browser.
 See <a href="#redirect-to-web" class="auto internal xref">Section 5.2.2.4</a> for details.<a href="#section-5.2.2-2.2.2.22.1" class="pilcrow">¶</a></p>
 </dd>
+                <dd class="break"></dd>
+<dt id="section-5.2.2-2.2.2.23">"native_authorization_unsupported":</dt>
+                <dd style="margin-left: 1.5em" id="section-5.2.2-2.2.2.24">
+                  <p id="section-5.2.2-2.2.2.24.1">The authorization server does not support the native authorization
+endpoint, or does, but a downstream authorization server it attempted
+to federate to, does not support the native authorization endpoint.<a href="#section-5.2.2-2.2.2.24.1" class="pilcrow">¶</a></p>
+</dd>
               <dd class="break"></dd>
 </dl>
+<p id="section-5.2.2-2.2.3">Values for the <code>error</code> parameter <span class="bcp14">MUST NOT</span> include characters
+outside the set %x20-21 / %x23-5B / %x5D-7E.<a href="#section-5.2.2-2.2.3" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-2.2.4">The authorization server <span class="bcp14">MAY</span> extend these error codes with custom
+messages based on the requirements of the authorization server.<a href="#section-5.2.2-2.2.4" class="pilcrow">¶</a></p>
 </dd>
-          <dd class="break"></dd>
-</dl>
-<div class="alignLeft art-text artwork" id="section-5.2.2-3">
-<pre>
-"native_authorization_unsupported":
-:     The authorization server does not support the native authorization
-      endpoint, or does, but a downstream authorization server it attempted
-      to federate to, does not support the native authorization endpoint.
-
- Values for the `error` parameter MUST NOT include characters
- outside the set %x20-21 / %x23-5B / %x5D-7E.
-
- The authorization server MAY extend these error codes with custom
- messages based on the requirements of the authorization server.
-</pre><a href="#section-5.2.2-3" class="pilcrow">¶</a>
-</div>
-<span class="break"></span><dl class="dlParallel" id="section-5.2.2-4">
-            <dt id="section-5.2.2-4.1">"error_description":</dt>
-            <dd style="margin-left: 1.5em" id="section-5.2.2-4.2">
-              <p id="section-5.2.2-4.2.1"><span class="bcp14">OPTIONAL</span>.  Human-readable ASCII <span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span> text providing
+            <dd class="break"></dd>
+<dt id="section-5.2.2-2.3">"error_description":</dt>
+            <dd style="margin-left: 1.5em" id="section-5.2.2-2.4">
+              <p id="section-5.2.2-2.4.1"><span class="bcp14">OPTIONAL</span>.  Human-readable ASCII <span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span> text providing
 additional information, used to assist the client developer in
 understanding the error that occurred.
 Values for the <code>error_description</code> parameter <span class="bcp14">MUST NOT</span> include
-characters outside the set %x20-21 / %x23-5B / %x5D-7E.<a href="#section-5.2.2-4.2.1" class="pilcrow">¶</a></p>
+characters outside the set %x20-21 / %x23-5B / %x5D-7E.<a href="#section-5.2.2-2.4.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-5.2.2-4.3">"error_uri":</dt>
-            <dd style="margin-left: 1.5em" id="section-5.2.2-4.4">
-              <p id="section-5.2.2-4.4.1"><span class="bcp14">OPTIONAL</span>.  A URI identifying a human-readable web page with
+<dt id="section-5.2.2-2.5">"error_uri":</dt>
+            <dd style="margin-left: 1.5em" id="section-5.2.2-2.6">
+              <p id="section-5.2.2-2.6.1"><span class="bcp14">OPTIONAL</span>.  A URI identifying a human-readable web page with
 information about the error, used to provide the client
 developer with additional information about the error.
 Values for the <code>error_uri</code> parameter <span class="bcp14">MUST</span> conform to the
 URI-reference syntax and thus <span class="bcp14">MUST NOT</span> include characters
-outside the set %x21 / %x23-5B / %x5D-7E.<a href="#section-5.2.2-4.4.1" class="pilcrow">¶</a></p>
+outside the set %x21 / %x23-5B / %x5D-7E.<a href="#section-5.2.2-2.6.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-5.2.2-4.5">"auth_session":</dt>
-            <dd style="margin-left: 1.5em" id="section-5.2.2-4.6">
-              <p id="section-5.2.2-4.6.1"><span class="bcp14">OPTIONAL</span>.  The auth session allows the authorization server to
+<dt id="section-5.2.2-2.7">"auth_session":</dt>
+            <dd style="margin-left: 1.5em" id="section-5.2.2-2.8">
+              <p id="section-5.2.2-2.8.1"><span class="bcp14">OPTIONAL</span>.  The auth session allows the authorization server to
 associate subsequent requests by this client with an ongoing
 authorization request sequence. The client <span class="bcp14">MUST</span> include
 the <code>auth_session</code> in follow-up requests to the authorization challenge
-endpoint if it receives one along with the error response.<a href="#section-5.2.2-4.6.1" class="pilcrow">¶</a></p>
+endpoint if it receives one along with the error response.<a href="#section-5.2.2-2.8.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-5.2.2-4.7">"request_uri":</dt>
-            <dd style="margin-left: 1.5em" id="section-5.2.2-4.8">
-              <p id="section-5.2.2-4.8.1"><span class="bcp14">OPTIONAL</span>.  A request URI as described by <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> Section 2.2.<a href="#section-5.2.2-4.8.1" class="pilcrow">¶</a></p>
+<dt id="section-5.2.2-2.9">"request_uri":</dt>
+            <dd style="margin-left: 1.5em" id="section-5.2.2-2.10">
+              <p id="section-5.2.2-2.10.1"><span class="bcp14">OPTIONAL</span>.  A request URI as described by <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> Section 2.2.<a href="#section-5.2.2-2.10.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-5.2.2-4.9">"federated_native_request_uri":</dt>
-            <dd style="margin-left: 1.5em" id="section-5.2.2-4.10">
-              <p id="section-5.2.2-4.10.1"><span class="bcp14">OPTIONAL</span>.  A request URI towards the Native Authorization Endpoint of
+<dt id="section-5.2.2-2.11">"federated_native_request_uri":</dt>
+            <dd style="margin-left: 1.5em" id="section-5.2.2-2.12">
+              <p id="section-5.2.2-2.12.1"><span class="bcp14">OPTIONAL</span>.  A request URI towards the Native Authorization Endpoint of
 a downstream authorization server, with the request parameters according
-to this specification, provided as query parameters.<a href="#section-5.2.2-4.10.1" class="pilcrow">¶</a></p>
+to this specification, provided as query parameters.<a href="#section-5.2.2-2.12.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-5.2.2-4.11">"expires_in":</dt>
-            <dd style="margin-left: 1.5em" id="section-5.2.2-4.12">
-              <p id="section-5.2.2-4.12.1"><span class="bcp14">OPTIONAL</span>.  The lifetime of the <code>request_uri</code> in seconds, as
-described by <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> Section 2.2.<a href="#section-5.2.2-4.12.1" class="pilcrow">¶</a></p>
+<dt id="section-5.2.2-2.13">"expires_in":</dt>
+            <dd style="margin-left: 1.5em" id="section-5.2.2-2.14">
+              <p id="section-5.2.2-2.14.1"><span class="bcp14">OPTIONAL</span>.  The lifetime of the <code>request_uri</code> in seconds, as
+described by <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> Section 2.2.<a href="#section-5.2.2-2.14.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 </dl>
-<p id="section-5.2.2-5">This specification requires the authorization server to define new
+<p id="section-5.2.2-3">This specification requires the authorization server to define new
 error codes that relate to the actions the client must take in order
 to properly authenticate the user. These new error codes are specific
 to the authorization server's implementation of this specification and are
-intentionally left out of scope.<a href="#section-5.2.2-5" class="pilcrow">¶</a></p>
-<p id="section-5.2.2-6">The parameters are included in the content of the HTTP response
+intentionally left out of scope.<a href="#section-5.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-4">The parameters are included in the content of the HTTP response
 using the <code>application/json</code> media type as defined by <span>[<a href="#RFC7159" class="cite xref">RFC7159</a>]</span>.  The
 parameters are serialized into a JSON structure by adding each
 parameter at the highest structure level.  Parameter names and string
 values are included as JSON strings.  Numerical values are included
 as JSON numbers.  The order of parameters does not matter and can
-vary.<a href="#section-5.2.2-6" class="pilcrow">¶</a></p>
-<p id="section-5.2.2-7">The authorization server <span class="bcp14">MAY</span> define additional parameters in the response
+vary.<a href="#section-5.2.2-4" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-5">The authorization server <span class="bcp14">MAY</span> define additional parameters in the response
 depending on the implementation. The authorization server <span class="bcp14">MAY</span> also define
 more specific content types for the error responses as long as the response
-is JSON and conforms to <code>application/&lt;AS-defined&gt;+json</code>.<a href="#section-5.2.2-7" class="pilcrow">¶</a></p>
+is JSON and conforms to <code>application/&lt;AS-defined&gt;+json</code>.<a href="#section-5.2.2-5" class="pilcrow">¶</a></p>
 <div id="federating-response">
 <section id="section-5.2.2.1">
             <h5 id="name-federating-response">
@@ -1917,8 +1912,8 @@ Content-Type: application/json
 {
     "error": "federate",
     "federated_native_request_uri": "https://next-as.com/native-redirect?
-    client_id=s6BhdRkqt3
-    &amp;request_uri=urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+    client_id=s6BhdRkqt3&amp;request_uri=
+    urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
 }
 </pre><a href="#section-5.2.2.1-4" class="pilcrow">¶</a>
 </div>
