@@ -1912,7 +1912,9 @@ Content-Type: application/json
 
 {
     "error": "federate",
-    "federated_native_request_uri": "https://next-as.com/native-redirect?client_id=s6BhdRkqt3&amp;request_uri=urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+    "federated_native_request_uri": "https://next-as.com/native-redirect?
+    client_id=s6BhdRkqt3
+    &amp;request_uri=urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
 }
 </pre><a href="#section-5.2.2.1-4" class="pilcrow">¶</a>
 </div>
@@ -1923,8 +1925,8 @@ POST /native-redirect HTTP/1.1
 Host: next-as.com
 Content-Type: application/x-www-form-urlencoded
 
-client_id=s6BhdRkqt3
-&amp;request_uri=urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX
+client_id=s6BhdRkqt3&amp;request_uri=
+urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX
 </pre><a href="#section-5.2.2.1-6" class="pilcrow">¶</a>
 </div>
 <p id="section-5.2.2.1-7">Example response to an authorization server, which federated to the current authorization server:<a href="#section-5.2.2.1-7" class="pilcrow">¶</a></p>
@@ -1935,7 +1937,8 @@ Content-Type: application/json
 
 {
     "error": "federated_response",
-    "federated_native_request_uri": "https://prev-as.com/native-redirect?authorization_code=uY29tL2F1dGhlbnRpY&amp;state=xyz"
+    "federated_native_request_uri": "https://prev-as.com/native-redirect?
+    authorization_code=uY29tL2F1dGhlbnRpY&amp;state=xyz"
 }
 </pre><a href="#section-5.2.2.1-8" class="pilcrow">¶</a>
 </div>
@@ -1979,7 +1982,9 @@ Content-Type: application/json
 
 {
     "error": "redirect_to_app",
-    "federated_native_request_uri": "https://next-as.com/native-redirect?client_id=s6BhdRkqt3&amp;request_uri=urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+    "federated_native_request_uri": "https://next-as.com/native-redirect?
+    client_id=s6BhdRkqt3&amp;request_uri=
+    urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
 }
 </pre><a href="#section-5.2.2.2-4" class="pilcrow">¶</a>
 </div>
