@@ -1782,20 +1782,37 @@ determine the target authorization server to federate to.
 See <a href="#insufficient-information" class="auto internal xref">Section 5.2.2.3</a> for details.<a href="#section-5.2.2-2.2.2.14.1" class="pilcrow">¶</a></p>
 </dd>
                 <dd class="break"></dd>
-<dt id="section-5.2.2-2.2.2.15">federated_response":</dt>
+<dt id="section-5.2.2-2.2.2.15">"federate":</dt>
                 <dd style="margin-left: 1.5em" id="section-5.2.2-2.2.2.16">
-                  <p id="section-5.2.2-2.2.2.16.1">The Authorization Server wishes to respond to an authorization
-server, which has federated to it. This response <span class="bcp14">MUST</span> include
-the <em>federated_native_request_uri</em> response parameter.
+                  <p id="section-5.2.2-2.2.2.16.1">The Authorization Server wishes to federate processing to another
+authorization server, which it is a client of. This response <span class="bcp14">MUST</span>
+include the <em>federated_native_request_uri</em> response parameter.
 See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2-2.2.2.16.1" class="pilcrow">¶</a></p>
 </dd>
                 <dd class="break"></dd>
-<dt id="section-5.2.2-2.2.2.17">"federate":</dt>
+<dt id="section-5.2.2-2.2.2.17">federated_response":</dt>
                 <dd style="margin-left: 1.5em" id="section-5.2.2-2.2.2.18">
-                  <p id="section-5.2.2-2.2.2.18.1">The Authorization Server wishes to federate processing to another
-authorization server, which it is a client of. This response <span class="bcp14">MUST</span>
-include the <em>federated_native_request_uri</em> response parameter.
+                  <p id="section-5.2.2-2.2.2.18.1">The Authorization Server wishes to respond to an authorization
+server, which has federated to it. This response <span class="bcp14">MUST</span> include
+the <em>federated_native_request_uri</em> response parameter.
 See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2-2.2.2.18.1" class="pilcrow">¶</a></p>
+</dd>
+                <dd class="break"></dd>
+<dt id="section-5.2.2-2.2.2.19">"redirect_to_app":</dt>
+                <dd style="margin-left: 1.5em" id="section-5.2.2-2.2.2.20">
+                  <p id="section-5.2.2-2.2.2.20.1">The Authorization Server wishes to fulfill the user interaction
+using another native app. This response <span class="bcp14">MUST</span> include the
+<em>federated_native_request_uri</em> response parameter.
+See <a href="#redirect-to-app-response" class="auto internal xref">Section 5.2.2.2</a> for details.<a href="#section-5.2.2-2.2.2.20.1" class="pilcrow">¶</a></p>
+</dd>
+                <dd class="break"></dd>
+<dt id="section-5.2.2-2.2.2.21">"redirect_to_web":</dt>
+                <dd style="margin-left: 1.5em" id="section-5.2.2-2.2.2.22">
+                  <p id="section-5.2.2-2.2.2.22.1">The request is not able to be fulfilled with any further
+direct interaction with the user. Instead, the client
+should initiate a new authorization code flow so that the
+user interacts with the authorization server in a web browser.
+See <a href="#redirect-to-web" class="auto internal xref">Section 5.2.2.4</a> for details.<a href="#section-5.2.2-2.2.2.22.1" class="pilcrow">¶</a></p>
 </dd>
               <dd class="break"></dd>
 </dl>
@@ -1804,19 +1821,6 @@ See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a
 </dl>
 <div class="alignLeft art-text artwork" id="section-5.2.2-3">
 <pre>
-""redirect_to_app":
- :     The Authorization Server wishes to fulfill the user interaction
-       using another native app. This response MUST include the
-       *federated_native_request_uri* response parameter.
-       See {{redirect-to-app-response}} for details.
-
- "redirect_to_web":
- :     The request is not able to be fulfilled with any further
-       direct interaction with the user. Instead, the client
-       should initiate a new authorization code flow so that the
-       user interacts with the authorization server in a web browser.
-       See {{redirect-to-web}} for details.
-
 "native_authorization_unsupported":
 :     The authorization server does not support the native authorization
       endpoint, or does, but a downstream authorization server it attempted

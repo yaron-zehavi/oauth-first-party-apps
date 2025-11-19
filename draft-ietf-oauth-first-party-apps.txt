@@ -556,29 +556,27 @@ Table of Contents
          challenge, for example to determine the target authorization
          server to federate to.  See Section 5.2.2.3 for details.
 
-      federated_response":  The Authorization Server wishes to respond
-         to an authorization server, which has federated to it.  This
-         response MUST include the _federated_native_request_uri_
-         response parameter.  See Section 5.2.2.1 for details.
-
       "federate":  The Authorization Server wishes to federate
          processing to another authorization server, which it is a
          client of.  This response MUST include the
          _federated_native_request_uri_ response parameter.  See
          Section 5.2.2.1 for details.
 
-""redirect_to_app":
- :     The Authorization Server wishes to fulfill the user interaction
-       using another native app. This response MUST include the
-       *federated_native_request_uri* response parameter.
-       See {{redirect-to-app-response}} for details.
+      federated_response":  The Authorization Server wishes to respond
+         to an authorization server, which has federated to it.  This
+         response MUST include the _federated_native_request_uri_
+         response parameter.  See Section 5.2.2.1 for details.
 
- "redirect_to_web":
- :     The request is not able to be fulfilled with any further
-       direct interaction with the user. Instead, the client
-       should initiate a new authorization code flow so that the
-       user interacts with the authorization server in a web browser.
-       See {{redirect-to-web}} for details.
+      "redirect_to_app":  The Authorization Server wishes to fulfill the
+         user interaction using another native app.  This response MUST
+         include the _federated_native_request_uri_ response parameter.
+         See Section 5.2.2.2 for details.
+
+      "redirect_to_web":  The request is not able to be fulfilled with
+         any further direct interaction with the user.  Instead, the
+         client should initiate a new authorization code flow so that
+         the user interacts with the authorization server in a web
+         browser.  See Section 5.2.2.4 for details.
 
 "native_authorization_unsupported":
 :     The authorization server does not support the native authorization
