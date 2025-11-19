@@ -1577,7 +1577,7 @@ and "Token Endpoint" defined by <span>[<a href="#RFC6749" class="cite xref">RFC6
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-native-authorization-endpoi" class="section-name selfRef">Native Authorization Endpoint</a>
         </h3>
 <p id="section-4.1-1">The native authorization endpoint is a new endpoint defined by this specification which the first-party application uses to obtain an authorization code.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">The native authorization endpoint is an HTTP API at the authorization server that accepts HTTP POST requests with parameters in the HTTP request message body using the <code>application/x-www-form-urlencoded</code> format. This format has a character encoding of UTF-8, as described in Appendix B of <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>. The authorization challenge endpoint URL <span class="bcp14">MUST</span> use the "https" scheme.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">The native authorization endpoint is an HTTP API at the authorization server that accepts HTTP POST requests with parameters in the HTTP request message body using the <code>application/x-www-form-urlencoded</code> format. This format has a character encoding of UTF-8, as described in Appendix B of <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>. The native authorization endpoint URL <span class="bcp14">MUST</span> use the "https" scheme.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.1-3">If the authorization server requires client authentication for this client on the Token Endpoint, then the authorization server <span class="bcp14">MUST</span> also require client authentication for this client on the Native Authorization Endpoint. See <a href="#client-authentication" class="auto internal xref">Section 9.4</a> for more details.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.1-4">Authorization servers supporting this specification <span class="bcp14">SHOULD</span> include the URL of their native authorization endpoint in their authorization server metadata document <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span> using the <code>native_authorization_endpoint</code> parameter as defined in <a href="#authorization-server-metadata" class="auto internal xref">Section 8</a>.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
 <p id="section-4.1-5">The native authorization endpoint accepts the authorization request parameters defined in <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> for the authorization endpoint as well as all applicable extensions defined for the authorization endpoint. Some examples of such extensions include Proof Key for Code Exchange (PKCE) <span>[<a href="#RFC7636" class="cite xref">RFC7636</a>]</span>, Resource Indicators <span>[<a href="#RFC8707" class="cite xref">RFC8707</a>]</span>, and OpenID Connect <span>[<a href="#OpenID" class="cite xref">OpenID</a>]</span>. It is important to note that some extension parameters have meaning in a web context but don't have meaning in a native mechanism (e.g. <code>response_mode=query</code>). It is out of scope as to what the AS does in the case that an extension defines a parameter that has no meaning in this use case.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
@@ -1614,7 +1614,7 @@ server to indicate that further authentication of the user is required.<a href="
         <h3 id="name-authorization-challenge-req">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-authorization-challenge-req" class="section-name selfRef">Authorization Challenge Request</a>
         </h3>
-<p id="section-5.1-1">The client makes a request to the authorization challenge endpoint by adding the
+<p id="section-5.1-1">The client makes a request to the native authorization endpoint by adding the
 following parameters, as well as parameters from any extensions, using the <code>application/x-www-form-urlencoded</code>
 format with a character encoding of UTF-8 in the HTTP request body:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-5.1-2">
@@ -1853,7 +1853,7 @@ outside the set %x21 / %x23-5B / %x5D-7E.<a href="#section-5.2.2-2.6.1" class="p
               <p id="section-5.2.2-2.8.1"><span class="bcp14">OPTIONAL</span>.  The auth session allows the authorization server to
 associate subsequent requests by this client with an ongoing
 authorization request sequence. The client <span class="bcp14">MUST</span> include
-the <code>auth_session</code> in follow-up requests to the authorization challenge
+the <code>auth_session</code> in follow-up requests to the native authorization
 endpoint if it receives one along with the error response.<a href="#section-5.2.2-2.8.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
@@ -1901,29 +1901,33 @@ is JSON and conforms to <code>application/&lt;AS-defined&gt;+json</code>.<a href
 or to respond to an authorization server which has federated to it, it responds with
 error code <em>federate</em> or <em>federated_response</em> accordingly, and provides the
 <em>federation_uri</em> response parameter.<a href="#section-5.2.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.1-2">Authorization server identifies it has been federated to, and avoids returning
+<p id="section-5.2.2.1-2">When federating to another authorization server, authorization server <span class="bcp14">MUST</span> return
+the <em>auth_session</em> attribute, to facilitate binding to the client's user agent.<a href="#section-5.2.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-3">Authorization server identifies it has been federated to, and avoids returning
 an Authorization Code Response <a href="#authorization-code-response" class="auto internal xref">Section 5.2.1</a> through the presence
 of the redirect_uri parameter. If a redirect_uri has been provided,
 authorization server provides a federating response whose <em>federation_uri</em>
-attribute is the provided redirect_uri with the appropriate response parameters.<a href="#section-5.2.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.1-3">Client <span class="bcp14">MUST</span> call the federation_uri as a <em>native authorization endpoint</em>,
-using the query string parameters as application/x-www-form-urlencoded request body.<a href="#section-5.2.2.1-3" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.1-4">Example <strong>federating</strong> response:<a href="#section-5.2.2.1-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.1-5">
+attribute is the provided redirect_uri with the appropriate response parameters.<a href="#section-5.2.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-4">Client <span class="bcp14">MUST</span> call the federation_uri as a <em>native authorization endpoint</em>,
+using the query string parameters as application/x-www-form-urlencoded request body.<a href="#section-5.2.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-5">Example <strong>federating</strong> response:<a href="#section-5.2.2.1-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.1-6">
 <pre>
 HTTP/1.1 400 Bad Request
+Server: prev-as.com
 Content-Type: application/json
 
 {
     "error": "federate",
+    "auth_session": "ce6772f5e07bc8361572f",
     "federation_uri": "https://next-as.com/native-redirect?
     client_id=s6BhdRkqt3request_uri=
     urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
 }
-</pre><a href="#section-5.2.2.1-5" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.1-6" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-6">Following which, the client calls <em>federation_uri</em>:<a href="#section-5.2.2.1-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.1-7">
+<p id="section-5.2.2.1-7">Following which, the client calls <em>federation_uri</em>:<a href="#section-5.2.2.1-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.1-8">
 <pre>
 POST /native-redirect HTTP/1.1
 Host: next-as.com
@@ -1931,10 +1935,10 @@ Content-Type: application/x-www-form-urlencoded
 
 client_id=s6BhdRkqt3&amp;request_uri=
 urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX
-</pre><a href="#section-5.2.2.1-7" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.1-8" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-8">Example <strong>response using a provided redirect_uri</strong>:<a href="#section-5.2.2.1-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.1-9">
+<p id="section-5.2.2.1-9">Example <strong>response using a provided redirect_uri</strong>:<a href="#section-5.2.2.1-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.1-10">
 <pre>
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -1942,25 +1946,25 @@ Content-Type: application/json
 {
     "error": "federated_response",
     "federation_uri": "https://prev-as.com/native-redirect?
-    authorization_code=uY29tL2F1dGhlbnRpY&amp;state=xyz"
+    authorization_code=uY29tL2F1dGhlbnRpY"
 }
-</pre><a href="#section-5.2.2.1-9" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.1-10" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-10">Following which, the client calls <em>federation_uri</em>:<a href="#section-5.2.2.1-10" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.1-11">
+<p id="section-5.2.2.1-11">Following which, the client calls <em>federation_uri</em>, adding previously obtained auth_session:<a href="#section-5.2.2.1-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.1-12">
 <pre>
 POST /native-redirect HTTP/1.1
 Host: prev-as.com
 Content-Type: application/x-www-form-urlencoded
 
 authorization_code=uY29tL2F1dGhlbnRpY
-&amp;state=xyz
-</pre><a href="#section-5.2.2.1-11" class="pilcrow">¶</a>
+&amp;auth_session=ce6772f5e07bc8361572f
+</pre><a href="#section-5.2.2.1-12" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-12">Client <span class="bcp14">SHALL</span> compile during each flow an Allowlist of DNS domains of all <em>federation_uri</em>
-it has encountered, which were returned with error code <em>federate</em>, to be used for validation
-of any federation_uri attributes received in conjunction with the error code <em>federated_response</em>,
-or as parameter when client's native_callback_uri is invoked (if provided).<a href="#section-5.2.2.1-12" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-13">Client <span class="bcp14">SHALL</span> compile during each flow an Allowlist of DNS domains of all <em>federation_uri</em>
+values encountered in conjunction with error code <em>federate</em>, to be used for validation
+of any <em>federation_uri</em> values received in conjunction with error code <em>federated_response</em>,
+or obtained when client's native_callback_uri was invoked (if provided).<a href="#section-5.2.2.1-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="redirect-to-app-response">
@@ -1987,7 +1991,8 @@ Content-Type: application/json
 }
 </pre><a href="#section-5.2.2.2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.2-5">Following which, client <span class="bcp14">MUST</span> use OS mechanisms to invoke the deep link received in <em>federation_uri</em>. If no app claiming federation_uri is found,
+<p id="section-5.2.2.2-5">Following which, client <span class="bcp14">MUST</span> use OS mechanisms to invoke the deep link received in
+<em>federation_uri</em>. If no app claiming federation_uri is found,
 <em>Client App</em> <span class="bcp14">MUST</span> terminate the flow and <span class="bcp14">MAY</span> attempt a normal non-native OAuth flow.<a href="#section-5.2.2.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2056,7 +2061,7 @@ Content-Type: application/json
 
 {
     "error": "insufficient_information",
-    "auth_session": "uY29tL2F1dGhlbnRpY",
+    "auth_session": "ce6772f5e07bc8361572f",
     "logo": "uri or base64-encoded logo of Authorization Server",
     "userPrompt": {
         "options": {
@@ -2097,7 +2102,7 @@ Content-Type: application/json
 
 {
     "error": "insufficient_information",
-    "auth_session": "uY29tL2F1dGhlbnRpY",
+    "auth_session": "ce6772f5e07bc8361572f",
     "action": "prompt",
     "id": "request-identifier-2",
     "logo": "uri or base64-encoded logo of Authorization Server",
@@ -2174,7 +2179,7 @@ to be defined by the authorization server. The format of these requests is not r
 to conform to the format of the initial authorization challenge requests
 (e.g. the request format may be <code>application/json</code> rather than <code>application/x-www-form-urlencoded</code>).<a href="#section-5.3-2" class="pilcrow">¶</a></p>
 <p id="section-5.3-3">These intermediate requests <span class="bcp14">MAY</span> also be sent to proprietary endpoints at the authorization server
-rather than the Authorization Challenge Endpoint.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+rather than the Native Authorization Endpoint.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <div id="auth-session">
 <section id="section-5.3.1">
           <h4 id="name-auth-session">
@@ -2182,7 +2187,7 @@ rather than the Authorization Challenge Endpoint.<a href="#section-5.3-3" class=
           </h4>
 <p id="section-5.3.1-1">The <code>auth_session</code> is a value that the authorization server issues in order to be able to associate subsequent requests from the same client. It is intended to be analagous to how a browser cookie associates multiple requests by the same browser to the authorization server.<a href="#section-5.3.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.1-2">The <code>auth_session</code> value is completely opaque to the client, and as such the authorization server <span class="bcp14">MUST</span> adequately protect the value from inspection by the client, for example by using a random string or using a JWE if the authorization server is not maintaining state on the backend.<a href="#section-5.3.1-2" class="pilcrow">¶</a></p>
-<p id="section-5.3.1-3">If the client has an <code>auth_session</code>, the client <span class="bcp14">MUST</span> include it in future requests to the authorization challenge endpoint. The client <span class="bcp14">MUST</span> store the <code>auth_session</code> beyond the issuance of the authorization code to be able to use it in future requests.<a href="#section-5.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.3.1-3">If the client has an <code>auth_session</code>, the client <span class="bcp14">MUST</span> include it in future requests to the native authorization endpoint of the respective authorization server that provided it. The client <span class="bcp14">MUST</span> store the <code>auth_session</code> beyond the issuance of the authorization code to be able to use it in future requests.<a href="#section-5.3.1-3" class="pilcrow">¶</a></p>
 <p id="section-5.3.1-4">Every response defined by this specification may include a new <code>auth_session</code> value. Clients <span class="bcp14">MUST NOT</span> assume that <code>auth_session</code> values are static, and <span class="bcp14">MUST</span> be prepared to update the stored <code>auth_session</code> value if one is received in a response.<a href="#section-5.3.1-4" class="pilcrow">¶</a></p>
 <p id="section-5.3.1-5">To mitigate the risk of session hijacking, the 'auth_session' <span class="bcp14">MUST</span> be bound to the device, and the authorization server <span class="bcp14">MUST</span> reject an 'auth_session' if it is presented from a different device than the one it was bound to.<a href="#section-5.3.1-5" class="pilcrow">¶</a></p>
 <p id="section-5.3.1-6">See <a href="#auth-session-security" class="auto internal xref">Section 9.6</a> for additional security considerations.<a href="#section-5.3.1-6" class="pilcrow">¶</a></p>
@@ -2197,7 +2202,7 @@ rather than the Authorization Challenge Endpoint.<a href="#section-5.3-3" class=
       <h2 id="name-token-request">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-token-request" class="section-name selfRef">Token Request</a>
       </h2>
-<p id="section-6-1">The client makes a request to the token endpoint using the authorization code it obtained from the authorization challenge endpoint.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">The client makes a request to the token endpoint using the authorization code it obtained from the native authorization endpoint.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">This specification does not define any additional parameters beyond the token request parameters defined in  Section 4.1.3 of <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>. However, notably, the <code>redirect_uri</code> parameter will not be included in this request, because no <code>redirect_uri</code> parameter was included in the authorization request.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <div id="token-endpoint-successful-response">
 <section id="section-6.1">
@@ -2222,7 +2227,7 @@ Cache-Control: no-store
 }
 </pre><a href="#section-6.1-3" class="pilcrow">¶</a>
 </div>
-<p id="section-6.1-4">The response <span class="bcp14">MAY</span> include an <code>auth_session</code> parameter which the client is expected to include on any subsequent requests to the authorization challenge endpoint, as described in <a href="#auth-session" class="auto internal xref">Section 5.3.1</a>. The <code>auth_session</code> parameter <span class="bcp14">MAY</span> also be included even if the authorization code was obtained through a traditional OAuth authorization code flow rather than the flow defined by this specification.<a href="#section-6.1-4" class="pilcrow">¶</a></p>
+<p id="section-6.1-4">The response <span class="bcp14">MAY</span> include an <code>auth_session</code> parameter which the client is expected to include on any subsequent requests to the native challenge endpoint, as described in <a href="#auth-session" class="auto internal xref">Section 5.3.1</a>. The <code>auth_session</code> parameter <span class="bcp14">MAY</span> also be included even if the authorization code was obtained through a traditional OAuth authorization code flow rather than the flow defined by this specification.<a href="#section-6.1-4" class="pilcrow">¶</a></p>
 <p id="section-6.1-5">Including the <code>auth_session</code> parameter in the token response enables flows such as step-up authentication <span>[<a href="#RFC9470" class="cite xref">RFC9470</a>]</span>, so that the authorization server can restore the context of a previous session and prompt only for the needed step-up factors. See <a href="#step-up-sms-example" class="auto internal xref">Appendix A.7</a> for an example application.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2245,14 +2250,14 @@ complete the authorization.<a href="#section-6.2-3.2.1" class="pilcrow">¶</a></
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-6.2-4">Additionally, the response <span class="bcp14">MAY</span> contain an <code>auth_session</code> parameter which the client is expected to include on a subsequent request to the authorization challenge endpoint.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
+<p id="section-6.2-4">Additionally, the response <span class="bcp14">MAY</span> contain an <code>auth_session</code> parameter which the client is expected to include on a subsequent request to the native authorization endpoint.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-6.2-5">
           <dt id="section-6.2-5.1">"auth_session":</dt>
           <dd style="margin-left: 1.5em" id="section-6.2-5.2">
             <p id="section-6.2-5.2.1"><span class="bcp14">OPTIONAL</span>.  The optional auth session value allows the authorization server to
 associate subsequent requests by this client with an ongoing
 authorization request sequence. The client <span class="bcp14">MUST</span> include
-the <code>auth_session</code> in follow-up requests to the challenge
+the <code>auth_session</code> in follow-up requests to the native authorizaion
 endpoint if it receives one along with the error response.<a href="#section-6.2-5.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
@@ -2266,7 +2271,7 @@ Cache-Control: no-store
 
 {
   "error": "insufficient_authorization",
-  "auth_session": "uY29tL2F1dGhlbnRpY"
+  "auth_session": "ce6772f5e07bc8361572f"
 }
 </pre><a href="#section-6.2-7" class="pilcrow">¶</a>
 </div>
@@ -2279,7 +2284,7 @@ Cache-Control: no-store
       <h2 id="name-resource-server-error-respo">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-resource-server-error-respo" class="section-name selfRef">Resource Server Error Response</a>
       </h2>
-<p id="section-7-1">Step-Up Authentication <span>[<a href="#RFC9470" class="cite xref">RFC9470</a>]</span> defines new error code values that a resource server can use to tell the client to start a new authorization request including <code>acr_values</code> and <code>max_age</code> from <span>[<a href="#OpenID" class="cite xref">OpenID</a>]</span>. Upon receiving this error response, the client starts a new first-party authorization request at the authorization challenge endpoint, and includes the <code>acr_values</code>, <code>max_age</code> and <code>scope</code> that were returned in the error response.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-1">Step-Up Authentication <span>[<a href="#RFC9470" class="cite xref">RFC9470</a>]</span> defines new error code values that a resource server can use to tell the client to start a new authorization request including <code>acr_values</code> and <code>max_age</code> from <span>[<a href="#OpenID" class="cite xref">OpenID</a>]</span>. Upon receiving this error response, the client starts a new first-party authorization request at the native authorization endpoint, and includes the <code>acr_values</code>, <code>max_age</code> and <code>scope</code> that were returned in the error response.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <p id="section-7-2">This specification does not define any new parameters for the resource server error response beyond those defined in <span>[<a href="#RFC9470" class="cite xref">RFC9470</a>]</span> and <span>[<a href="#RFC6750" class="cite xref">RFC6750</a>]</span>.<a href="#section-7-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2292,7 +2297,7 @@ Cache-Control: no-store
 <span class="break"></span><dl class="dlParallel" id="section-8-2">
         <dt id="section-8-2.1">"native_authorization_endpoint":</dt>
         <dd style="margin-left: 1.5em" id="section-8-2.2">
-          <p id="section-8-2.2.1">The URL of the authorization challenge endpoint at which a client can initiate
+          <p id="section-8-2.2.1">The URL of the native authorization endpoint at which a client can initiate
 an authorization request and eventually obtain an authorization code.<a href="#section-8-2.2.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
@@ -2337,8 +2342,8 @@ an authorization request and eventually obtain an authorization code.<a href="#s
         <h3 id="name-credential-stuffing-attacks">
 <a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-credential-stuffing-attacks" class="section-name selfRef">Credential Stuffing Attacks</a>
         </h3>
-<p id="section-9.3-1">The authorization challenge endpoint is capable of directly receiving user credentials and returning authorization codes. This exposes a new vector to perform credential stuffing attacks, if additional measures are not taken to ensure the authenticity of the application.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
-<p id="section-9.3-2">An authorization server may already have a combination of built-in or 3rd party security tools in place to monitor and reduce this risk in browser-based authentication flows. Implementors <span class="bcp14">SHOULD</span> consider similar security measures to reduce this risk in the authorization challenge endpoint. Additionally, the attestation APIs <span class="bcp14">SHOULD</span> be used when possible to assert a level of confidence to the authorization server that the request is originating from an application owned by the same party.<a href="#section-9.3-2" class="pilcrow">¶</a></p>
+<p id="section-9.3-1">The native authorization endpoint is capable of directly receiving user credentials and returning authorization codes. This exposes a new vector to perform credential stuffing attacks, if additional measures are not taken to ensure the authenticity of the application.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
+<p id="section-9.3-2">An authorization server may already have a combination of built-in or 3rd party security tools in place to monitor and reduce this risk in browser-based authentication flows. Implementors <span class="bcp14">SHOULD</span> consider similar security measures to reduce this risk in the native authorization endpoint. Additionally, the attestation APIs <span class="bcp14">SHOULD</span> be used when possible to assert a level of confidence to the authorization server that the request is originating from an application owned by the same party.<a href="#section-9.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="client-authentication">
@@ -2489,7 +2494,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
         </h3>
 <p id="section-10.2-1">IANA has (TBD) registered the following values in the IANA "OAuth Authorization Server Metadata" registry of <span>[<a href="#IANA.oauth-parameters" class="cite xref">IANA.oauth-parameters</a>]</span> established by <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
 <p id="section-10.2-2"><strong>Metadata Name</strong>: <code>native_authorization_endpoint</code><a href="#section-10.2-2" class="pilcrow">¶</a></p>
-<p id="section-10.2-3"><strong>Metadata Description</strong>: URL of the authorization server's authorization challenge endpoint.<a href="#section-10.2-3" class="pilcrow">¶</a></p>
+<p id="section-10.2-3"><strong>Metadata Description</strong>: URL of the authorization server's native authorization endpoint.<a href="#section-10.2-3" class="pilcrow">¶</a></p>
 <p id="section-10.2-4"><strong>Change Controller</strong>: IESG<a href="#section-10.2-4" class="pilcrow">¶</a></p>
 <p id="section-10.2-5"><strong>Specification Document</strong>: Section 4.1 of [[ this specification ]]<a href="#section-10.2-5" class="pilcrow">¶</a></p>
 </section>
@@ -2642,7 +2647,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.1-2.1.1">The Client collects the username from the user.<a href="#appendix-A.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.1-2.2">
-            <p id="appendix-A.1-2.2.1">The Client sends an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Authorization Challenge Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>) including the username.<a href="#appendix-A.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-2.2.1">The Client sends an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Native Authorization Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>) including the username.<a href="#appendix-A.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.1-2.3">
             <p id="appendix-A.1-2.3.1">The Authorization Server verifies the username and returns a challenge<a href="#appendix-A.1-2.3.1" class="pilcrow">¶</a></p>
@@ -2651,7 +2656,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.1-2.4.1">The Client signs the challenge using the platform authenticator, which results in the user being prompted for verification with biometrics or a PIN.<a href="#appendix-A.1-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.1-2.5">
-            <p id="appendix-A.1-2.5.1">The Client sends the signed challenge, username, and credential ID to the Authorization Challenge Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>).<a href="#appendix-A.1-2.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-2.5.1">The Client sends the signed challenge, username, and credential ID to the Native Authorization Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>).<a href="#appendix-A.1-2.5.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.1-2.6">
             <p id="appendix-A.1-2.6.1">The Authorization Server verifies the signed challenge and returns an Authorization Code.<a href="#appendix-A.1-2.6.1" class="pilcrow">¶</a></p>
@@ -2676,7 +2681,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.2-2.1.1">The Client collects username from the user.<a href="#appendix-A.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.2-2.2">
-            <p id="appendix-A.2-2.2.1">The Client sends an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Authorization Challenge Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>) including the username.<a href="#appendix-A.2-2.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.2-2.2.1">The Client sends an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Native Authorization Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>) including the username.<a href="#appendix-A.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.2-2.3">
             <p id="appendix-A.2-2.3.1">The Authorization Server verifies the username and determines that the account is locked and returns a Redirect error response.<a href="#appendix-A.2-2.3.1" class="pilcrow">¶</a></p>
@@ -2704,7 +2709,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.3-2.1.1">The Client collects username and OTP from user.<a href="#appendix-A.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.3-2.2">
-            <p id="appendix-A.3-2.2.1">The Client sends an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Authorization Challenge Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>) including the username and OTP.<a href="#appendix-A.3-2.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.3-2.2.1">The Client sends an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Native Authorization Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>) including the username and OTP.<a href="#appendix-A.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.3-2.3">
             <p id="appendix-A.3-2.3.1">The Authorization Server verifies the username and OTP and returns an Authorization Code.<a href="#appendix-A.3-2.3.1" class="pilcrow">¶</a></p>
@@ -2729,13 +2734,13 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.4-2.1.1">The Client collects an e-mail address from the user.<a href="#appendix-A.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.4-2.2">
-            <p id="appendix-A.4-2.2.1">The Client sends the e-mail address in an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Authorization Challenge Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>).<a href="#appendix-A.4-2.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.4-2.2.1">The Client sends the e-mail address in an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Native Authorization Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>).<a href="#appendix-A.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.4-2.3">
             <p id="appendix-A.4-2.3.1">The Authorization Server sends a verification code to the e-mail address and returns an Error Response (<a href="#challenge-error-response" class="auto internal xref">Section 5.2.2</a>) including <code>"error": "insufficient_authorization"</code>, <code>"auth_session"</code> and a custom property indicating that an e-mail verification code must be entered.<a href="#appendix-A.4-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.4-2.4">
-            <p id="appendix-A.4-2.4.1">The Client presents a user experience guiding the user to copy the e-mail verification code to the Client. Once the e-mail verification code is entered, the Client sends an Authorization Challenge Request to the Authorization Challenge Endpoint, including the e-mail verification code as well as the <code>auth_session</code> parameter returned in the previous Error Response.<a href="#appendix-A.4-2.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.4-2.4.1">The Client presents a user experience guiding the user to copy the e-mail verification code to the Client. Once the e-mail verification code is entered, the Client sends an Authorization Challenge Request to the Native Authorization Endpoint, including the e-mail verification code as well as the <code>auth_session</code> parameter returned in the previous Error Response.<a href="#appendix-A.4-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.4-2.5">
             <p id="appendix-A.4-2.5.1">The Authorization Server uses the <code>auth_session</code> to maintain the session and verifies the e-mail verification code before issuing an Authorization Code to the Client.<a href="#appendix-A.4-2.5.1" class="pilcrow">¶</a></p>
@@ -2750,7 +2755,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
 <p id="appendix-A.4-3">An alternative version of this verification involves the user clicking a link in an email rather than manually entering a verification code. This is typically done for email verification flows rather than inline in a login flow. The protocol-level details remain the same for the alternative flow despite the different user experience. All steps except step 4 above remain the same, but the client presents an alternative user experience for step 4 described below:<a href="#appendix-A.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A.4-4.1">
-            <p id="appendix-A.4-4.1.1">The Client presents a message to the user instructing them to click the link sent to their email address. The user clicks the link in the email, which contains the verification code in the URL. The URL launches the app providing the verification code to the Client. The Client sends the verification code and <code>auth_session</code> to the Authorization Challenge Endpoint.<a href="#appendix-A.4-4.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.4-4.1.1">The Client presents a message to the user instructing them to click the link sent to their email address. The user clicks the link in the email, which contains the verification code in the URL. The URL launches the app providing the verification code to the Client. The Client sends the verification code and <code>auth_session</code> to the Native Authorization Endpoint.<a href="#appendix-A.4-4.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2766,13 +2771,13 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.5-2.1.1">The Client collects a mobile phone number from the user.<a href="#appendix-A.5-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.5-2.2">
-            <p id="appendix-A.5-2.2.1">The Client sends the phone number in an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Authorization Challenge Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>).<a href="#appendix-A.5-2.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.5-2.2.1">The Client sends the phone number in an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Native Authorization Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>).<a href="#appendix-A.5-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.5-2.3">
             <p id="appendix-A.5-2.3.1">The Authorization Server sends a confirmation code to the phone number and returns an Error Response (<a href="#challenge-error-response" class="auto internal xref">Section 5.2.2</a>) including <code>"error": "insufficient_authorization"</code>, <code>"auth_session"</code> and a custom property indicating that a confirmation code must be entered.<a href="#appendix-A.5-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.5-2.4">
-            <p id="appendix-A.5-2.4.1">The Client presents a user experience guiding the user to enter the confirmation code. Once the code is entered, the Client sends an Authorization Challenge Request to the Authorization Challenge Endpoint, including the confirmation code as well as the <code>auth_session</code> parameter returned in the previous Error Response.<a href="#appendix-A.5-2.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.5-2.4.1">The Client presents a user experience guiding the user to enter the confirmation code. Once the code is entered, the Client sends an Authorization Challenge Request to the Native Authorization Endpoint, including the confirmation code as well as the <code>auth_session</code> parameter returned in the previous Error Response.<a href="#appendix-A.5-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.5-2.5">
             <p id="appendix-A.5-2.5.1">The Authorization Server uses the <code>auth_session</code> to maintain the session context and verifies the code before issuing an Authorization Code to the Client.<a href="#appendix-A.5-2.5.1" class="pilcrow">¶</a></p>
@@ -2812,7 +2817,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.6-2.6.1">The Client prompts the user to enter an OTP.<a href="#appendix-A.6-2.6.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.6-2.7">
-            <p id="appendix-A.6-2.7.1">The Client sends the OTP and <code>auth_session</code> in an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Authorization Challenge Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>).<a href="#appendix-A.6-2.7.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.6-2.7.1">The Client sends the OTP and <code>auth_session</code> in an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Native Authorization Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>).<a href="#appendix-A.6-2.7.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.6-2.8">
             <p id="appendix-A.6-2.8.1">The Authorization Server verifies the <code>auth_session</code> and OTP, and returns an Authorization Code.<a href="#appendix-A.6-2.8.1" class="pilcrow">¶</a></p>
@@ -2843,7 +2848,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.7-2.2.1">When the Client presents the Access token to the Resource Server, the Resource Server determines that the <code>acr</code> claim in the Access Token is insufficient given the resource the user wants to access and responds with an <code>insufficient_user_authentication</code> error code, along with the desired <code>acr_values</code> and desired <code>max_age</code>.<a href="#appendix-A.7-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.7-2.3">
-            <p id="appendix-A.7-2.3.1">The Client sends an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Authorization Challenge Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>) including the <code>auth_session</code>, <code>acr_values</code> and <code>max_age</code> parameters.<a href="#appendix-A.7-2.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.7-2.3.1">The Client sends an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Native Authorization Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>) including the <code>auth_session</code>, <code>acr_values</code> and <code>max_age</code> parameters.<a href="#appendix-A.7-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.7-2.4">
             <p id="appendix-A.7-2.4.1">The Authorization Server verifies the <code>auth_session</code> and determines which authentication methods must be satisfied based on the <code>acr_values</code>, and responds with an Error Response (<a href="#challenge-error-response" class="auto internal xref">Section 5.2.2</a>) including <code>"error": "insufficient_authorization"</code> and a custom property indicating that an OTP must be entered.<a href="#appendix-A.7-2.4.1" class="pilcrow">¶</a></p>
@@ -2852,7 +2857,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.7-2.5.1">The Client prompts the user for an OTP, which the user obtains and enters.<a href="#appendix-A.7-2.5.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.7-2.6">
-            <p id="appendix-A.7-2.6.1">The Client sends an Authorization Challenge Request to the Authorization Challenge Endpoint including the <code>auth_session</code> and OTP.<a href="#appendix-A.7-2.6.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.7-2.6.1">The Client sends an Authorization Challenge Request to the Native Authorization Endpoint including the <code>auth_session</code> and OTP.<a href="#appendix-A.7-2.6.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.7-2.7">
             <p id="appendix-A.7-2.7.1">The Authorization Server verifies the OTP and returns an Authorization Code.<a href="#appendix-A.7-2.7.1" class="pilcrow">¶</a></p>
@@ -2880,7 +2885,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.8-2.1.1">The Client collects a username from the user.<a href="#appendix-A.8-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.8-2.2">
-            <p id="appendix-A.8-2.2.1">The Client sends an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Authorization Challenge Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>) including the username.<a href="#appendix-A.8-2.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.8-2.2.1">The Client sends an Authorization Challenge Request (<a href="#challenge-request" class="auto internal xref">Section 5.1</a>) to the Native Authorization Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>) including the username.<a href="#appendix-A.8-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.8-2.3">
             <p id="appendix-A.8-2.3.1">The Authorization Server returns an Error Response (<a href="#challenge-error-response" class="auto internal xref">Section 5.2.2</a>) including <code>"error": "insufficient_authorization"</code>, <code>"auth_session"</code>, and a custom property indicating that an e-mail address must be collected.<a href="#appendix-A.8-2.3.1" class="pilcrow">¶</a></p>
@@ -2889,13 +2894,13 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.8-2.4.1">The Client collects an e-mail address from the user.<a href="#appendix-A.8-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.8-2.5">
-            <p id="appendix-A.8-2.5.1">The Client sends the e-mail address as part of a second Authorization Challenge Request to the Authorization Challenge Endpoint, along with the <code>auth_session</code> parameter.<a href="#appendix-A.8-2.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.8-2.5.1">The Client sends the e-mail address as part of a second Authorization Challenge Request to the Native Authorization Endpoint, along with the <code>auth_session</code> parameter.<a href="#appendix-A.8-2.5.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.8-2.6">
             <p id="appendix-A.8-2.6.1">The Authorization Server sends a verification code to the e-mail address and returns an Error Response including <code>"error": "insufficient_authorization"</code>, <code>"auth_session"</code> and a custom property indicating that an e-mail verification code must be entered.<a href="#appendix-A.8-2.6.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.8-2.7">
-            <p id="appendix-A.8-2.7.1">The Client presents a user experience guiding the user to copy the e-mail verification code to the Client. Once the e-mail verification code is entered, the Client sends an Authorization Challenge Request to the Authorization Challenge Endpoint, including the e-mail verification code as well as the <code>auth_session</code> parameter returned in the previous Error Response.<a href="#appendix-A.8-2.7.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.8-2.7.1">The Client presents a user experience guiding the user to copy the e-mail verification code to the Client. Once the e-mail verification code is entered, the Client sends an Authorization Challenge Request to the Native Authorization Endpoint, including the e-mail verification code as well as the <code>auth_session</code> parameter returned in the previous Error Response.<a href="#appendix-A.8-2.7.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.8-2.8">
             <p id="appendix-A.8-2.8.1">The Authorization Server uses the <code>auth_session</code> to maintain the session context, and verifies the e-mail verification code. It determines that it also needs a phone number for account recovery purposes and returns an Error Response including <code>"error": "insufficient_authorization"</code>, <code>"auth_session"</code> and a custom property indicating that a phone number must be collected.<a href="#appendix-A.8-2.8.1" class="pilcrow">¶</a></p>
@@ -2904,13 +2909,13 @@ an authorization request and eventually obtain an authorization code.<a href="#s
             <p id="appendix-A.8-2.9.1">The Client collects a mobile phone number from the user.<a href="#appendix-A.8-2.9.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.8-2.10">
-            <p id="appendix-A.8-2.10.1">The Client sends the phone number in an Authorization Challenge Request to the Authorization Challenge Endpoint, along with the <code>auth_session</code>.<a href="#appendix-A.8-2.10.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.8-2.10.1">The Client sends the phone number in an Authorization Challenge Request to the Native Authorization Endpoint, along with the <code>auth_session</code>.<a href="#appendix-A.8-2.10.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.8-2.11">
             <p id="appendix-A.8-2.11.1">The Authorization Server uses the <code>auth_session</code> parameter to link the previous requests. It sends a confirmation code to the phone number and returns an Error Response including <code>"error": "insufficient_authorization"</code>, <code>"auth_session"</code> and a custom property indicating that a SMS confirmation code must be entered.<a href="#appendix-A.8-2.11.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.8-2.12">
-            <p id="appendix-A.8-2.12.1">The Client presents a user experience guiding the user to enter the SMS confirmation code. Once the SMS verification code is entered, the Client sends an Authorization Challenge Request to the Authorization Challenge Endpoint, including the confirmation code as well as the <code>auth_session</code> parameter returned in the previous Error Response.<a href="#appendix-A.8-2.12.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.8-2.12.1">The Client presents a user experience guiding the user to enter the SMS confirmation code. Once the SMS verification code is entered, the Client sends an Authorization Challenge Request to the Native Authorization Endpoint, including the confirmation code as well as the <code>auth_session</code> parameter returned in the previous Error Response.<a href="#appendix-A.8-2.12.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.8-2.13">
             <p id="appendix-A.8-2.13.1">The Authorization Server uses the <code>auth_session</code> to maintain the session context, and verifies the SMS verification code before issuing an Authorization Code to the Client.<a href="#appendix-A.8-2.13.1" class="pilcrow">¶</a></p>
@@ -2963,7 +2968,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
           <dt id="appendix-B.2-2.1">"otp_required":</dt>
           <dd style="margin-left: 1.5em" id="appendix-B.2-2.2">
             <p id="appendix-B.2-2.2.1">The client should collect an OTP from the user and send the OTP in
-a second request to the Authorization Challenge Endpoint. The HTTP
+a second request to the Native Authorization Endpoint. The HTTP
 response code to use with this error value is <code>401 Unauthorized</code>.<a href="#appendix-B.2-2.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
@@ -3061,9 +3066,9 @@ Cache-Control: no-store
       </h2>
 <p id="appendix-C-1">This specification defines a new authorization flow the client can use to obtain an authorization grant. There are two primary reasons for designing the specification this way.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
 <p id="appendix-C-2">This enables existing OAuth implementations to make fewer modifications to existing code by not needing to extend the token endpoint with new logic. Instead, the new logic can be encapsulated in an entirely new endpoint, the output of which is an authorization code which can be redeemed for an access token at the existing token endpoint.<a href="#appendix-C-2" class="pilcrow">¶</a></p>
-<p id="appendix-C-3">This also mirrors more closely the existing architecture of the redirect-based authorization code flow. In the authorization code flow, the client first initiates a request by redirecting a browser to the authorization endpoint, at which point the authorization server takes over with its own custom logic to authenticate the user in whatever way appropriate, possibly including interacting with other endpoints for the actual user authentication process. Afterwards, the authorization server redirects the user back to the client application with an authorization code in the query string. This specification mirrors the existing approach by having the client first make a POST request to the Authorization Challenge Endpoint, at which point the authorization server provides its own custom logic to authenticate the user, eventually returning an authorization code.<a href="#appendix-C-3" class="pilcrow">¶</a></p>
+<p id="appendix-C-3">This also mirrors more closely the existing architecture of the redirect-based authorization code flow. In the authorization code flow, the client first initiates a request by redirecting a browser to the authorization endpoint, at which point the authorization server takes over with its own custom logic to authenticate the user in whatever way appropriate, possibly including interacting with other endpoints for the actual user authentication process. Afterwards, the authorization server redirects the user back to the client application with an authorization code in the query string. This specification mirrors the existing approach by having the client first make a POST request to the Native Authorization Endpoint, at which point the authorization server provides its own custom logic to authenticate the user, eventually returning an authorization code.<a href="#appendix-C-3" class="pilcrow">¶</a></p>
 <p id="appendix-C-4">An alternative design would be to define new custom grant types for the different authentication factors such as WebAuthn, OTP, etc. The drawback to this design is that conceptually, these authentication methods do not map to an OAuth grant. In other words, the OAuth authorization grant captures the user's intent to authorize access to some data, and that authorization is represented by an authorization code, not by different methods of authenticating the user.<a href="#appendix-C-4" class="pilcrow">¶</a></p>
-<p id="appendix-C-5">Another alternative option would be to have the Authorization Challenge Endpoint return an access token upon successful authentication of the user. This was deliberately not chosen, as this adds a new endpoint that tokens would be returned from. In most deployments, the Token Endpoint is the only endpoint that actually issues tokens, and includes all the implmentation logic around token binding, rate limiting, etc. Instead of defining a new endpoint that issues tokens which would have to have similar logic and protections, instead the new endpoint only issues authorization codes, which can be exchanged for tokens at the existing Token Endpoint just like in the redirect-based Authorization Code flow.<a href="#appendix-C-5" class="pilcrow">¶</a></p>
+<p id="appendix-C-5">Another alternative option would be to have the Native Authorization Endpoint return an access token upon successful authentication of the user. This was deliberately not chosen, as this adds a new endpoint that tokens would be returned from. In most deployments, the Token Endpoint is the only endpoint that actually issues tokens, and includes all the implmentation logic around token binding, rate limiting, etc. Instead of defining a new endpoint that issues tokens which would have to have similar logic and protections, instead the new endpoint only issues authorization codes, which can be exchanged for tokens at the existing Token Endpoint just like in the redirect-based Authorization Code flow.<a href="#appendix-C-5" class="pilcrow">¶</a></p>
 <p id="appendix-C-6">These design decisions should enable authorization server implementations to isolate and encapsulate the changes needed to support this specification.<a href="#appendix-C-6" class="pilcrow">¶</a></p>
 </section>
 </div>

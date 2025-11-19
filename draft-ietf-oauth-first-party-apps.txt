@@ -366,7 +366,7 @@ Table of Contents
    server that accepts HTTP POST requests with parameters in the HTTP
    request message body using the application/x-www-form-urlencoded
    format.  This format has a character encoding of UTF-8, as described
-   in Appendix B of [RFC6749].  The authorization challenge endpoint URL
+   in Appendix B of [RFC6749].  The native authorization endpoint URL
    MUST use the "https" scheme.
 
    If the authorization server requires client authentication for this
@@ -436,7 +436,7 @@ Table of Contents
 
 5.1.  Authorization Challenge Request
 
-   The client makes a request to the authorization challenge endpoint by
+   The client makes a request to the native authorization endpoint by
    adding the following parameters, as well as parameters from any
    extensions, using the application/x-www-form-urlencoded format with a
    character encoding of UTF-8 in the HTTP request body:
@@ -604,9 +604,8 @@ Table of Contents
    "auth_session":  OPTIONAL.  The auth session allows the authorization
       server to associate subsequent requests by this client with an
       ongoing authorization request sequence.  The client MUST include
-      the auth_session in follow-up requests to the authorization
-      challenge endpoint if it receives one along with the error
-      response.
+      the auth_session in follow-up requests to the native authorization
+      endpoint if it receives one along with the error response.
 
    "request_uri":  OPTIONAL.  A request URI as described by [RFC9126]
       Section 2.2.
@@ -647,6 +646,10 @@ Table of Contents
    _federated_response_ accordingly, and provides the _federation_uri_
    response parameter.
 
+   When federating to another authorization server, authorization server
+   MUST return the _auth_session_ attribute, to facilitate binding to
+   the client's user agent.
+
    Authorization server identifies it has been federated to, and avoids
    returning an Authorization Code Response Section 5.2.1 through the
    presence of the redirect_uri parameter.  If a redirect_uri has been
@@ -661,10 +664,12 @@ Table of Contents
    Example *federating* response:
 
    HTTP/1.1 400 Bad Request
+   Server: prev-as.com
    Content-Type: application/json
 
    {
        "error": "federate",
+       "auth_session": "ce6772f5e07bc8361572f",
        "federation_uri": "https://next-as.com/native-redirect?
        client_id=s6BhdRkqt3request_uri=
        urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
@@ -687,24 +692,25 @@ Table of Contents
    {
        "error": "federated_response",
        "federation_uri": "https://prev-as.com/native-redirect?
-       authorization_code=uY29tL2F1dGhlbnRpY&state=xyz"
+       authorization_code=uY29tL2F1dGhlbnRpY"
    }
 
-   Following which, the client calls _federation_uri_:
+   Following which, the client calls _federation_uri_, adding previously
+   obtained auth_session:
 
    POST /native-redirect HTTP/1.1
    Host: prev-as.com
    Content-Type: application/x-www-form-urlencoded
 
    authorization_code=uY29tL2F1dGhlbnRpY
-   &state=xyz
+   &auth_session=ce6772f5e07bc8361572f
 
    Client SHALL compile during each flow an Allowlist of DNS domains of
-   all _federation_uri_ it has encountered, which were returned with
-   error code _federate_, to be used for validation of any
-   federation_uri attributes received in conjunction with the error code
-   _federated_response_, or as parameter when client's
-   native_callback_uri is invoked (if provided).
+   all _federation_uri_ values encountered in conjunction with error
+   code _federate_, to be used for validation of any _federation_uri_
+   values received in conjunction with error code _federated_response_,
+   or obtained when client's native_callback_uri was invoked (if
+   provided).
 
 5.2.2.2.  Redirect to app response
 
@@ -784,7 +790,7 @@ Table of Contents
 
    {
        "error": "insufficient_information",
-       "auth_session": "uY29tL2F1dGhlbnRpY",
+       "auth_session": "ce6772f5e07bc8361572f",
        "logo": "uri or base64-encoded logo of Authorization Server",
        "userPrompt": {
            "options": {
@@ -823,7 +829,7 @@ Table of Contents
 
    {
        "error": "insufficient_information",
-       "auth_session": "uY29tL2F1dGhlbnRpY",
+       "auth_session": "ce6772f5e07bc8361572f",
        "action": "prompt",
        "id": "request-identifier-2",
        "logo": "uri or base64-encoded logo of Authorization Server",
@@ -897,7 +903,7 @@ Table of Contents
    urlencoded).
 
    These intermediate requests MAY also be sent to proprietary endpoints
-   at the authorization server rather than the Authorization Challenge
+   at the authorization server rather than the Native Authorization
    Endpoint.
 
 5.3.1.  Auth Session
@@ -915,9 +921,10 @@ Table of Contents
    the backend.
 
    If the client has an auth_session, the client MUST include it in
-   future requests to the authorization challenge endpoint.  The client
-   MUST store the auth_session beyond the issuance of the authorization
-   code to be able to use it in future requests.
+   future requests to the native authorization endpoint of the
+   respective authorization server that provided it.  The client MUST
+   store the auth_session beyond the issuance of the authorization code
+   to be able to use it in future requests.
 
    Every response defined by this specification may include a new
    auth_session value.  Clients MUST NOT assume that auth_session values
@@ -934,7 +941,7 @@ Table of Contents
 6.  Token Request
 
    The client makes a request to the token endpoint using the
-   authorization code it obtained from the authorization challenge
+   authorization code it obtained from the native authorization
    endpoint.
 
    This specification does not define any additional parameters beyond
@@ -964,11 +971,11 @@ Table of Contents
    }
 
    The response MAY include an auth_session parameter which the client
-   is expected to include on any subsequent requests to the
-   authorization challenge endpoint, as described in Section 5.3.1.  The
-   auth_session parameter MAY also be included even if the authorization
-   code was obtained through a traditional OAuth authorization code flow
-   rather than the flow defined by this specification.
+   is expected to include on any subsequent requests to the native
+   challenge endpoint, as described in Section 5.3.1.  The auth_session
+   parameter MAY also be included even if the authorization code was
+   obtained through a traditional OAuth authorization code flow rather
+   than the flow defined by this specification.
 
    Including the auth_session parameter in the token response enables
    flows such as step-up authentication [RFC9470], so that the
@@ -993,13 +1000,13 @@ Table of Contents
 
    Additionally, the response MAY contain an auth_session parameter
    which the client is expected to include on a subsequent request to
-   the authorization challenge endpoint.
+   the native authorization endpoint.
 
    "auth_session":  OPTIONAL.  The optional auth session value allows
       the authorization server to associate subsequent requests by this
       client with an ongoing authorization request sequence.  The client
-      MUST include the auth_session in follow-up requests to the
-      challenge endpoint if it receives one along with the error
+      MUST include the auth_session in follow-up requests to the native
+      authorizaion endpoint if it receives one along with the error
       response.
 
    For example:
@@ -1010,7 +1017,7 @@ Table of Contents
 
    {
      "error": "insufficient_authorization",
-     "auth_session": "uY29tL2F1dGhlbnRpY"
+     "auth_session": "ce6772f5e07bc8361572f"
    }
 
 7.  Resource Server Error Response
@@ -1019,9 +1026,9 @@ Table of Contents
    resource server can use to tell the client to start a new
    authorization request including acr_values and max_age from [OpenID].
    Upon receiving this error response, the client starts a new first-
-   party authorization request at the authorization challenge endpoint,
-   and includes the acr_values, max_age and scope that were returned in
-   the error response.
+   party authorization request at the native authorization endpoint, and
+   includes the acr_values, max_age and scope that were returned in the
+   error response.
 
    This specification does not define any new parameters for the
    resource server error response beyond those defined in [RFC9470] and
@@ -1033,9 +1040,9 @@ Table of Contents
    introduced to signal the server's capability and policy with respect
    to first-party applications.
 
-   "native_authorization_endpoint":  The URL of the authorization
-      challenge endpoint at which a client can initiate an authorization
-      request and eventually obtain an authorization code.
+   "native_authorization_endpoint":  The URL of the native authorization
+      endpoint at which a client can initiate an authorization request
+      and eventually obtain an authorization code.
 
 9.  Security Considerations
 
@@ -1097,7 +1104,7 @@ Table of Contents
 
 9.3.  Credential Stuffing Attacks
 
-   The authorization challenge endpoint is capable of directly receiving
+   The native authorization endpoint is capable of directly receiving
    user credentials and returning authorization codes.  This exposes a
    new vector to perform credential stuffing attacks, if additional
    measures are not taken to ensure the authenticity of the application.
@@ -1105,8 +1112,8 @@ Table of Contents
    An authorization server may already have a combination of built-in or
    3rd party security tools in place to monitor and reduce this risk in
    browser-based authentication flows.  Implementors SHOULD consider
-   similar security measures to reduce this risk in the authorization
-   challenge endpoint.  Additionally, the attestation APIs SHOULD be
+   similar security measures to reduce this risk in the native
+   authorization endpoint.  Additionally, the attestation APIs SHOULD be
    used when possible to assert a level of confidence to the
    authorization server that the request is originating from an
    application owned by the same party.
@@ -1307,8 +1314,8 @@ Table of Contents
 
    *Metadata Name*: native_authorization_endpoint
 
-   *Metadata Description*: URL of the authorization server's
-   authorization challenge endpoint.
+   *Metadata Description*: URL of the authorization server's native
+   authorization endpoint.
 
    *Change Controller*: IESG
 
@@ -1455,8 +1462,8 @@ A.1.  Passkey
    1.  The Client collects the username from the user.
 
    2.  The Client sends an Authorization Challenge Request (Section 5.1)
-       to the Authorization Challenge Endpoint (Section 4.1) including
-       the username.
+       to the Native Authorization Endpoint (Section 4.1) including the
+       username.
 
    3.  The Authorization Server verifies the username and returns a
        challenge
@@ -1466,7 +1473,7 @@ A.1.  Passkey
        biometrics or a PIN.
 
    5.  The Client sends the signed challenge, username, and credential
-       ID to the Authorization Challenge Endpoint (Section 4.1).
+       ID to the Native Authorization Endpoint (Section 4.1).
 
    6.  The Authorization Server verifies the signed challenge and
        returns an Authorization Code.
@@ -1485,8 +1492,8 @@ A.2.  Redirect to Authorization Server
    1.  The Client collects username from the user.
 
    2.  The Client sends an Authorization Challenge Request (Section 5.1)
-       to the Authorization Challenge Endpoint (Section 4.1) including
-       the username.
+       to the Native Authorization Endpoint (Section 4.1) including the
+       username.
 
    3.  The Authorization Server verifies the username and determines
        that the account is locked and returns a Redirect error response.
@@ -1515,8 +1522,8 @@ A.3.  Passwordless One-Time Password (OTP)
    1.  The Client collects username and OTP from user.
 
    2.  The Client sends an Authorization Challenge Request (Section 5.1)
-       to the Authorization Challenge Endpoint (Section 4.1) including
-       the username and OTP.
+       to the Native Authorization Endpoint (Section 4.1) including the
+       username and OTP.
 
    3.  The Authorization Server verifies the username and OTP and
        returns an Authorization Code.
@@ -1539,7 +1546,7 @@ A.4.  E-Mail Confirmation Code
    1.  The Client collects an e-mail address from the user.
 
    2.  The Client sends the e-mail address in an Authorization Challenge
-       Request (Section 5.1) to the Authorization Challenge Endpoint
+       Request (Section 5.1) to the Native Authorization Endpoint
        (Section 4.1).
 
    3.  The Authorization Server sends a verification code to the e-mail
@@ -1551,9 +1558,9 @@ A.4.  E-Mail Confirmation Code
    4.  The Client presents a user experience guiding the user to copy
        the e-mail verification code to the Client.  Once the e-mail
        verification code is entered, the Client sends an Authorization
-       Challenge Request to the Authorization Challenge Endpoint,
-       including the e-mail verification code as well as the
-       auth_session parameter returned in the previous Error Response.
+       Challenge Request to the Native Authorization Endpoint, including
+       the e-mail verification code as well as the auth_session
+       parameter returned in the previous Error Response.
 
    5.  The Authorization Server uses the auth_session to maintain the
        session and verifies the e-mail verification code before issuing
@@ -1579,7 +1586,7 @@ A.4.  E-Mail Confirmation Code
       link in the email, which contains the verification code in the
       URL.  The URL launches the app providing the verification code to
       the Client.  The Client sends the verification code and
-      auth_session to the Authorization Challenge Endpoint.
+      auth_session to the Native Authorization Endpoint.
 
 A.5.  Mobile Confirmation Code
 
@@ -1593,7 +1600,7 @@ A.5.  Mobile Confirmation Code
    1.  The Client collects a mobile phone number from the user.
 
    2.  The Client sends the phone number in an Authorization Challenge
-       Request (Section 5.1) to the Authorization Challenge Endpoint
+       Request (Section 5.1) to the Native Authorization Endpoint
        (Section 4.1).
 
    3.  The Authorization Server sends a confirmation code to the phone
@@ -1604,9 +1611,9 @@ A.5.  Mobile Confirmation Code
 
    4.  The Client presents a user experience guiding the user to enter
        the confirmation code.  Once the code is entered, the Client
-       sends an Authorization Challenge Request to the Authorization
-       Challenge Endpoint, including the confirmation code as well as
-       the auth_session parameter returned in the previous Error
+       sends an Authorization Challenge Request to the Native
+       Authorization Endpoint, including the confirmation code as well
+       as the auth_session parameter returned in the previous Error
        Response.
 
    5.  The Authorization Server uses the auth_session to maintain the
@@ -1652,7 +1659,7 @@ A.6.  Re-authenticating to an app a week later using OTP
    6.   The Client prompts the user to enter an OTP.
 
    7.   The Client sends the OTP and auth_session in an Authorization
-        Challenge Request (Section 5.1) to the Authorization Challenge
+        Challenge Request (Section 5.1) to the Native Authorization
         Endpoint (Section 4.1).
 
    8.   The Authorization Server verifies the auth_session and OTP, and
@@ -1694,9 +1701,8 @@ A.7.  Step-up Authentication using Confirmation SMS
         max_age.
 
    3.   The Client sends an Authorization Challenge Request
-        (Section 5.1) to the Authorization Challenge Endpoint
-        (Section 4.1) including the auth_session, acr_values and max_age
-        parameters.
+        (Section 5.1) to the Native Authorization Endpoint (Section 4.1)
+        including the auth_session, acr_values and max_age parameters.
 
    4.   The Authorization Server verifies the auth_session and
         determines which authentication methods must be satisfied based
@@ -1708,7 +1714,7 @@ A.7.  Step-up Authentication using Confirmation SMS
         and enters.
 
    6.   The Client sends an Authorization Challenge Request to the
-        Authorization Challenge Endpoint including the auth_session and
+        Native Authorization Endpoint including the auth_session and
         OTP.
 
    7.   The Authorization Server verifies the OTP and returns an
@@ -1737,8 +1743,8 @@ A.8.  Registration
    1.   The Client collects a username from the user.
 
    2.   The Client sends an Authorization Challenge Request
-        (Section 5.1) to the Authorization Challenge Endpoint
-        (Section 4.1) including the username.
+        (Section 5.1) to the Native Authorization Endpoint (Section 4.1)
+        including the username.
 
    3.   The Authorization Server returns an Error Response
         (Section 5.2.2) including "error": "insufficient_authorization",
@@ -1748,7 +1754,7 @@ A.8.  Registration
    4.   The Client collects an e-mail address from the user.
 
    5.   The Client sends the e-mail address as part of a second
-        Authorization Challenge Request to the Authorization Challenge
+        Authorization Challenge Request to the Native Authorization
         Endpoint, along with the auth_session parameter.
 
    6.   The Authorization Server sends a verification code to the e-mail
@@ -1760,7 +1766,7 @@ A.8.  Registration
    7.   The Client presents a user experience guiding the user to copy
         the e-mail verification code to the Client.  Once the e-mail
         verification code is entered, the Client sends an Authorization
-        Challenge Request to the Authorization Challenge Endpoint,
+        Challenge Request to the Native Authorization Endpoint,
         including the e-mail verification code as well as the
         auth_session parameter returned in the previous Error Response.
 
@@ -1775,7 +1781,7 @@ A.8.  Registration
    9.   The Client collects a mobile phone number from the user.
 
    10.  The Client sends the phone number in an Authorization Challenge
-        Request to the Authorization Challenge Endpoint, along with the
+        Request to the Native Authorization Endpoint, along with the
         auth_session.
 
    11.  The Authorization Server uses the auth_session parameter to link
@@ -1788,7 +1794,7 @@ A.8.  Registration
    12.  The Client presents a user experience guiding the user to enter
         the SMS confirmation code.  Once the SMS verification code is
         entered, the Client sends an Authorization Challenge Request to
-        the Authorization Challenge Endpoint, including the confirmation
+        the Native Authorization Endpoint, including the confirmation
         code as well as the auth_session parameter returned in the
         previous Error Response.
 
@@ -1834,7 +1840,7 @@ B.2.  Authorization Challenge Response Parameters
    response below.
 
    "otp_required":  The client should collect an OTP from the user and
-      send the OTP in a second request to the Authorization Challenge
+      send the OTP in a second request to the Native Authorization
       Endpoint.  The HTTP response code to use with this error value is
       401 Unauthorized.
 
@@ -1932,7 +1938,7 @@ Appendix C.  Design Goals
    Afterwards, the authorization server redirects the user back to the
    client application with an authorization code in the query string.
    This specification mirrors the existing approach by having the client
-   first make a POST request to the Authorization Challenge Endpoint, at
+   first make a POST request to the Native Authorization Endpoint, at
    which point the authorization server provides its own custom logic to
    authenticate the user, eventually returning an authorization code.
 
@@ -1944,17 +1950,17 @@ Appendix C.  Design Goals
    some data, and that authorization is represented by an authorization
    code, not by different methods of authenticating the user.
 
-   Another alternative option would be to have the Authorization
-   Challenge Endpoint return an access token upon successful
-   authentication of the user.  This was deliberately not chosen, as
-   this adds a new endpoint that tokens would be returned from.  In most
-   deployments, the Token Endpoint is the only endpoint that actually
-   issues tokens, and includes all the implmentation logic around token
-   binding, rate limiting, etc.  Instead of defining a new endpoint that
-   issues tokens which would have to have similar logic and protections,
-   instead the new endpoint only issues authorization codes, which can
-   be exchanged for tokens at the existing Token Endpoint just like in
-   the redirect-based Authorization Code flow.
+   Another alternative option would be to have the Native Authorization
+   Endpoint return an access token upon successful authentication of the
+   user.  This was deliberately not chosen, as this adds a new endpoint
+   that tokens would be returned from.  In most deployments, the Token
+   Endpoint is the only endpoint that actually issues tokens, and
+   includes all the implmentation logic around token binding, rate
+   limiting, etc.  Instead of defining a new endpoint that issues tokens
+   which would have to have similar logic and protections, instead the
+   new endpoint only issues authorization codes, which can be exchanged
+   for tokens at the existing Token Endpoint just like in the redirect-
+   based Authorization Code flow.
 
    These design decisions should enable authorization server
    implementations to isolate and encapsulate the changes needed to
