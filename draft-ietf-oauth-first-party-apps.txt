@@ -5,10 +5,10 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                                      Okta
 Intended status: Standards Track                             G. Fletcher
-Expires: 22 May 2026                               Capital One Financial
+Expires: 23 May 2026                               Capital One Financial
                                                             P. Kasselman
                                                         Defakto Security
-                                                        18 November 2025
+                                                        19 November 2025
 
 
                  OAuth 2.0 for First-Party Applications
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 May 2026.
+   This Internet-Draft will expire on 23 May 2026.
 
 Copyright Notice
 
@@ -450,10 +450,10 @@ Table of Contents
       auth session, described in Section 5.3.1.
 
    "code_challenge":  OPTIONAL.  The code challenge as defined by
-      [RFC7636].  See Section 5.2.2.3 for details.
+      [RFC7636].  See Section 5.2.2.4 for details.
 
    "code_challenge_method":  OPTIONAL.  The code challenge method as
-      defined by [RFC7636].  See Section 5.2.2.3 for details.
+      defined by [RFC7636].  See Section 5.2.2.4 for details.
 
    "native_callback_uri":  OPTIONAL.  Native client app's redirect_uri,
       claimed as deep link. _native_callback_uri_ is invoked by
@@ -554,7 +554,7 @@ Table of Contents
       "insufficient_information":  the Authorization Server requires
          additional user input, which is not an authentication
          challenge, for example to determine the target authorization
-         server to federate to.  See Section 5.2.2.2 for details.
+         server to federate to.  See Section 5.2.2.3 for details.
 
       "federate":  The Authorization Server wishes to federate
          processing to another authorization server, which it is a
@@ -567,6 +567,12 @@ Table of Contents
        server, which has federated to it. This response MUST include
        the *federated_native_request_uri* response parameter.
        See {{federating-response}} for details.
+
+ "redirect_to_app":
+ :     The Authorization Server wishes to fulfill the user interaction
+       using another native app. This response MUST include the
+       *federated_native_request_uri* response parameter.
+       See {{redirect-to-app-response}} for details.
 
  "redirect_to_web":
  :     The request is not able to be fulfilled with any further
@@ -697,7 +703,32 @@ Content-Type: application/json
 
    *  After receiving the error code _federated_response_.
 
-5.2.2.2.  Additional Information Required Response
+5.2.2.2.  Redirect to app response
+
+   If the authorization server decides to use another native app to
+   interact with end user, it responds with error code _redirect_to_app_
+   and provides the _federated_native_request_uri_ response parameter.
+
+   Client MUST call the federated_native_request_uri as a _native
+   authorization endpoint_, using the query string parameters as
+   application/x-www-form-urlencoded request body.
+
+   Example redirect_to_app response:
+
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+    "error": "redirect_to_app",
+    "federated_native_request_uri": "https://next-as.com/native-redirect?client_id=s6BhdRkqt3&request_uri=urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+}
+
+   Following which, client MUST use OS mechanisms to invoke the deep
+   link received in _federated_native_request_uri_. If no app claiming
+   federated_native_request_uri is found, _Client App_ MUST terminate
+   the flow and MAY attempt a normal non-native OAuth flow.
+
+5.2.2.3.  Additional Information Required Response
 
    If additional user input is required, for example to determine where
    to federate to, The response body shall contain the following
@@ -823,7 +854,7 @@ Content-Type: application/json
    auth_session=ce6772f5e07bc8361572f
    &email=end_user@example.as.com
 
-5.2.2.3.  Redirect to Web Error Response
+5.2.2.4.  Redirect to Web Error Response
 
    The authorization server may choose to interact directly with the
    user based on a risk assesment, the introduction of a new

@@ -1056,7 +1056,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Parecki, et al.</td>
-<td class="center">Expires 22 May 2026</td>
+<td class="center">Expires 23 May 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1069,12 +1069,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-oauth-first-party-apps-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-11-18" class="published">18 November 2025</time>
+<time datetime="2025-11-19" class="published">19 November 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-05-22">22 May 2026</time></dd>
+<dd class="expires"><time datetime="2026-05-23">23 May 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ applications, only delegating to the browser in unexpected, high risk, or error 
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 22 May 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 May 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1637,13 +1637,13 @@ authorization server and if no <code>auth_session</code> is included.<a href="#s
 <dt id="section-5.1-2.7">"code_challenge":</dt>
           <dd style="margin-left: 1.5em" id="section-5.1-2.8">
             <p id="section-5.1-2.8.1"><span class="bcp14">OPTIONAL</span>. The code challenge as defined by <span>[<a href="#RFC7636" class="cite xref">RFC7636</a>]</span>.
-See <a href="#redirect-to-web" class="auto internal xref">Section 5.2.2.3</a> for details.<a href="#section-5.1-2.8.1" class="pilcrow">¶</a></p>
+See <a href="#redirect-to-web" class="auto internal xref">Section 5.2.2.4</a> for details.<a href="#section-5.1-2.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-5.1-2.9">"code_challenge_method":</dt>
           <dd style="margin-left: 1.5em" id="section-5.1-2.10">
             <p id="section-5.1-2.10.1"><span class="bcp14">OPTIONAL</span>. The code challenge method as defined by <span>[<a href="#RFC7636" class="cite xref">RFC7636</a>]</span>.
-See <a href="#redirect-to-web" class="auto internal xref">Section 5.2.2.3</a> for details.<a href="#section-5.1-2.10.1" class="pilcrow">¶</a></p>
+See <a href="#redirect-to-web" class="auto internal xref">Section 5.2.2.4</a> for details.<a href="#section-5.1-2.10.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-5.1-2.11">"native_callback_uri":</dt>
@@ -1779,7 +1779,7 @@ complete the authorization.<a href="#section-5.2.2-2.2.2.12.1" class="pilcrow">�
                   <p id="section-5.2.2-2.2.2.14.1">the Authorization Server requires additional user input,
 which is not an authentication challenge, for example to
 determine the target authorization server to federate to.
-See <a href="#insufficient-information" class="auto internal xref">Section 5.2.2.2</a> for details.<a href="#section-5.2.2-2.2.2.14.1" class="pilcrow">¶</a></p>
+See <a href="#insufficient-information" class="auto internal xref">Section 5.2.2.3</a> for details.<a href="#section-5.2.2-2.2.2.14.1" class="pilcrow">¶</a></p>
 </dd>
                 <dd class="break"></dd>
 <dt id="section-5.2.2-2.2.2.15">"federate":</dt>
@@ -1801,6 +1801,12 @@ See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a
        server, which has federated to it. This response MUST include
        the *federated_native_request_uri* response parameter.
        See {{federating-response}} for details.
+
+ "redirect_to_app":
+ :     The Authorization Server wishes to fulfill the user interaction
+       using another native app. This response MUST include the
+       *federated_native_request_uri* response parameter.
+       See {{redirect-to-app-response}} for details.
 
  "redirect_to_web":
  :     The request is not able to be fulfilled with any further
@@ -1953,65 +1959,91 @@ authorization_code=uY29tL2F1dGhlbnRpY
             </ul>
 </section>
 </div>
-<div id="insufficient-information">
+<div id="redirect-to-app-response">
 <section id="section-5.2.2.2">
-            <h5 id="name-additional-information-requ">
-<a href="#section-5.2.2.2" class="section-number selfRef">5.2.2.2. </a><a href="#name-additional-information-requ" class="section-name selfRef">Additional Information Required Response</a>
+            <h5 id="name-redirect-to-app-response">
+<a href="#section-5.2.2.2" class="section-number selfRef">5.2.2.2. </a><a href="#name-redirect-to-app-response" class="section-name selfRef">Redirect to app response</a>
             </h5>
-<p id="section-5.2.2.2-1">If additional user input is required, for example to determine where to federate to,
-The response body shall contain the following additional properties:<a href="#section-5.2.2.2-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-5.2.2.2-2">
-              <dt id="section-5.2.2.2-2.1">logo:</dt>
-              <dd style="margin-left: 1.5em" id="section-5.2.2.2-2.2">
-                <p id="section-5.2.2.2-2.2.1"><span class="bcp14">OPTIONAL</span>. URL or base64-encoded logo of <em>Authorization Server</em>, for branding purposes.<a href="#section-5.2.2.2-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.2-1">If the authorization server decides to use another native app to interact with
+end user, it responds with error code <em>redirect_to_app</em> and provides the
+<em>federated_native_request_uri</em> response parameter.<a href="#section-5.2.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.2-2">Client <span class="bcp14">MUST</span> call the federated_native_request_uri as a <em>native authorization endpoint</em>,
+using the query string parameters as application/x-www-form-urlencoded request body.<a href="#section-5.2.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.2-3">Example redirect_to_app response:<a href="#section-5.2.2.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.2-4">
+<pre>
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+    "error": "redirect_to_app",
+    "federated_native_request_uri": "https://next-as.com/native-redirect?client_id=s6BhdRkqt3&amp;request_uri=urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+}
+</pre><a href="#section-5.2.2.2-4" class="pilcrow">¶</a>
+</div>
+<p id="section-5.2.2.2-5">Following which, client <span class="bcp14">MUST</span> use OS mechanisms to invoke the deep link received in <em>federated_native_request_uri</em>. If no app claiming federated_native_request_uri is found,
+<em>Client App</em> <span class="bcp14">MUST</span> terminate the flow and <span class="bcp14">MAY</span> attempt a normal non-native OAuth flow.<a href="#section-5.2.2.2-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="insufficient-information">
+<section id="section-5.2.2.3">
+            <h5 id="name-additional-information-requ">
+<a href="#section-5.2.2.3" class="section-number selfRef">5.2.2.3. </a><a href="#name-additional-information-requ" class="section-name selfRef">Additional Information Required Response</a>
+            </h5>
+<p id="section-5.2.2.3-1">If additional user input is required, for example to determine where to federate to,
+The response body shall contain the following additional properties:<a href="#section-5.2.2.3-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-5.2.2.3-2">
+              <dt id="section-5.2.2.3-2.1">logo:</dt>
+              <dd style="margin-left: 1.5em" id="section-5.2.2.3-2.2">
+                <p id="section-5.2.2.3-2.2.1"><span class="bcp14">OPTIONAL</span>. URL or base64-encoded logo of <em>Authorization Server</em>, for branding purposes.<a href="#section-5.2.2.3-2.2.1" class="pilcrow">¶</a></p>
 </dd>
               <dd class="break"></dd>
-<dt id="section-5.2.2.2-2.3">userPrompt:</dt>
-              <dd style="margin-left: 1.5em" id="section-5.2.2.2-2.4">
-                <p id="section-5.2.2.2-2.4.1"><span class="bcp14">REQUIRED</span>. A JSON object containing the prompt definition. The following parameters <span class="bcp14">MAY</span> be used:<a href="#section-5.2.2.2-2.4.1" class="pilcrow">¶</a></p>
+<dt id="section-5.2.2.3-2.3">userPrompt:</dt>
+              <dd style="margin-left: 1.5em" id="section-5.2.2.3-2.4">
+                <p id="section-5.2.2.3-2.4.1"><span class="bcp14">REQUIRED</span>. A JSON object containing the prompt definition. The following parameters <span class="bcp14">MAY</span> be used:<a href="#section-5.2.2.3-2.4.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
 </dl>
 <ul class="normal">
-<li class="normal" id="section-5.2.2.2-3.1">
-                <p id="section-5.2.2.2-3.1.1">options: <span class="bcp14">OPTIONAL</span>. A JSON object that defines a dropdown/select input with various options to choose from. Each key is the parameter name to be sent in the response and each value defines the option:<a href="#section-5.2.2.2-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.2.2.3-3.1">
+                <p id="section-5.2.2.3-3.1.1">options: <span class="bcp14">OPTIONAL</span>. A JSON object that defines a dropdown/select input with various options to choose from. Each key is the parameter name to be sent in the response and each value defines the option:<a href="#section-5.2.2.3-3.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.2.2.2-3.1.2.1">
-                    <p id="section-5.2.2.2-3.1.2.1.1">title: <span class="bcp14">OPTIONAL</span>. A string holding the input's title.<a href="#section-5.2.2.2-3.1.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.2.2.3-3.1.2.1">
+                    <p id="section-5.2.2.3-3.1.2.1.1">title: <span class="bcp14">OPTIONAL</span>. A string holding the input's title.<a href="#section-5.2.2.3-3.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                  <li class="normal" id="section-5.2.2.2-3.1.2.2">
-                    <p id="section-5.2.2.2-3.1.2.2.1">description: <span class="bcp14">OPTIONAL</span>. A string holding the input's description.<a href="#section-5.2.2.2-3.1.2.2.1" class="pilcrow">¶</a></p>
+                  <li class="normal" id="section-5.2.2.3-3.1.2.2">
+                    <p id="section-5.2.2.3-3.1.2.2.1">description: <span class="bcp14">OPTIONAL</span>. A string holding the input's description.<a href="#section-5.2.2.3-3.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                  <li class="normal" id="section-5.2.2.2-3.1.2.3">
-                    <p id="section-5.2.2.2-3.1.2.3.1">values: <span class="bcp14">REQUIRED</span>. A JSON object where each key is the selection value and each value holds display data for that value:<a href="#section-5.2.2.2-3.1.2.3.1" class="pilcrow">¶</a></p>
+                  <li class="normal" id="section-5.2.2.3-3.1.2.3">
+                    <p id="section-5.2.2.3-3.1.2.3.1">values: <span class="bcp14">REQUIRED</span>. A JSON object where each key is the selection value and each value holds display data for that value:<a href="#section-5.2.2.3-3.1.2.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.2.2.2-3.1.2.3.2.1">
-                        <p id="section-5.2.2.2-3.1.2.3.2.1.1">name: <span class="bcp14">REQUIRED</span>. A string holding the display name of the selection value.<a href="#section-5.2.2.2-3.1.2.3.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.2.2.3-3.1.2.3.2.1">
+                        <p id="section-5.2.2.3-3.1.2.3.2.1.1">name: <span class="bcp14">REQUIRED</span>. A string holding the display name of the selection value.<a href="#section-5.2.2.3-3.1.2.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                      <li class="normal" id="section-5.2.2.2-3.1.2.3.2.2">
-                        <p id="section-5.2.2.2-3.1.2.3.2.2.1">logo: <span class="bcp14">OPTIONAL</span>. A string holding a URL or base64-encoded image for that selection value.<a href="#section-5.2.2.2-3.1.2.3.2.2.1" class="pilcrow">¶</a></p>
+                      <li class="normal" id="section-5.2.2.3-3.1.2.3.2.2">
+                        <p id="section-5.2.2.3-3.1.2.3.2.2.1">logo: <span class="bcp14">OPTIONAL</span>. A string holding a URL or base64-encoded image for that selection value.<a href="#section-5.2.2.3-3.1.2.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
                     </ul>
 </li>
                 </ul>
 </li>
-              <li class="normal" id="section-5.2.2.2-3.2">
-                <p id="section-5.2.2.2-3.2.1">inputs: <span class="bcp14">OPTIONAL</span>. A JSON object that defines an input field. Each key is the parameter name to be sent in the response and each value defines the input field:<a href="#section-5.2.2.2-3.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-5.2.2.3-3.2">
+                <p id="section-5.2.2.3-3.2.1">inputs: <span class="bcp14">OPTIONAL</span>. A JSON object that defines an input field. Each key is the parameter name to be sent in the response and each value defines the input field:<a href="#section-5.2.2.3-3.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.2.2.2-3.2.2.1">
-                    <p id="section-5.2.2.2-3.2.2.1.1">title: <span class="bcp14">OPTIONAL</span>. A string holding the input's title.<a href="#section-5.2.2.2-3.2.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.2.2.3-3.2.2.1">
+                    <p id="section-5.2.2.3-3.2.2.1.1">title: <span class="bcp14">OPTIONAL</span>. A string holding the input's title.<a href="#section-5.2.2.3-3.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                  <li class="normal" id="section-5.2.2.2-3.2.2.2">
-                    <p id="section-5.2.2.2-3.2.2.2.1">hint: <span class="bcp14">OPTIONAL</span>. A string holding the input's hint that is displayed if the input is empty.<a href="#section-5.2.2.2-3.2.2.2.1" class="pilcrow">¶</a></p>
+                  <li class="normal" id="section-5.2.2.3-3.2.2.2">
+                    <p id="section-5.2.2.3-3.2.2.2.1">hint: <span class="bcp14">OPTIONAL</span>. A string holding the input's hint that is displayed if the input is empty.<a href="#section-5.2.2.3-3.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                  <li class="normal" id="section-5.2.2.2-3.2.2.3">
-                    <p id="section-5.2.2.2-3.2.2.3.1">description: <span class="bcp14">OPTIONAL</span>. A string holding the input's description.<a href="#section-5.2.2.2-3.2.2.3.1" class="pilcrow">¶</a></p>
+                  <li class="normal" id="section-5.2.2.3-3.2.2.3">
+                    <p id="section-5.2.2.3-3.2.2.3.1">description: <span class="bcp14">OPTIONAL</span>. A string holding the input's description.<a href="#section-5.2.2.3-3.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
                 </ul>
 </li>
             </ul>
-<p id="section-5.2.2.2-4">Example of prompting end-user for 2 multiple-choice inputs:<a href="#section-5.2.2.2-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.2-5">
+<p id="section-5.2.2.3-4">Example of prompting end-user for 2 multiple-choice inputs:<a href="#section-5.2.2.3-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.3-5">
 <pre>
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -2049,10 +2081,10 @@ Content-Type: application/json
         }
     }
 }
-</pre><a href="#section-5.2.2.2-5" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.3-5" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.2-6">Example of prompting end-user for text input entry:<a href="#section-5.2.2.2-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.2-7">
+<p id="section-5.2.2.3-6">Example of prompting end-user for text input entry:<a href="#section-5.2.2.3-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.3-7">
 <pre>
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -2073,10 +2105,10 @@ Content-Type: application/json
         }
     }
 }
-</pre><a href="#section-5.2.2.2-7" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.3-7" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.2-8">The client gathers the required additional information and makes a POST request to the Native Authorization Endpoint. Example of response following end-user multiple-choice:<a href="#section-5.2.2.2-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.2-9">
+<p id="section-5.2.2.3-8">The client gathers the required additional information and makes a POST request to the Native Authorization Endpoint. Example of response following end-user multiple-choice:<a href="#section-5.2.2.3-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.3-9">
 <pre>
 POST /native-authorization HTTP/1.1
 Host: example.as.com
@@ -2085,10 +2117,10 @@ Content-Type: application/x-www-form-urlencoded
 auth_session=ce6772f5e07bc8361572f
 &amp;bank=bankOfSomething
 &amp;segment=retail
-</pre><a href="#section-5.2.2.2-9" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.3-9" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.2-10">Example of <em>Client App</em> response following end-user input entry:<a href="#section-5.2.2.2-10" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.2-11">
+<p id="section-5.2.2.3-10">Example of <em>Client App</em> response following end-user input entry:<a href="#section-5.2.2.3-10" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.3-11">
 <pre>
 POST /native-authorization HTTP/1.1
 Host: example.as.com
@@ -2096,29 +2128,29 @@ Content-Type: application/x-www-form-urlencoded
 
 auth_session=ce6772f5e07bc8361572f
 &amp;email=end_user@example.as.com
-</pre><a href="#section-5.2.2.2-11" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.3-11" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="redirect-to-web">
-<section id="section-5.2.2.3">
+<section id="section-5.2.2.4">
             <h5 id="name-redirect-to-web-error-respo">
-<a href="#section-5.2.2.3" class="section-number selfRef">5.2.2.3. </a><a href="#name-redirect-to-web-error-respo" class="section-name selfRef">Redirect to Web Error Response</a>
+<a href="#section-5.2.2.4" class="section-number selfRef">5.2.2.4. </a><a href="#name-redirect-to-web-error-respo" class="section-name selfRef">Redirect to Web Error Response</a>
             </h5>
-<p id="section-5.2.2.3-1">The authorization server may choose to interact directly with the user based on a risk
+<p id="section-5.2.2.4-1">The authorization server may choose to interact directly with the user based on a risk
 assesment, the introduction of a new authentication method not supported
 in the application, or to handle an exception flow like account recovery.
 To indicate this error to the client, the authorization server returns an
-error response as defined above with the <code>redirect_to_web</code> error code.<a href="#section-5.2.2.3-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.3-2">In this case, the client is expected to initiate a new OAuth
-Authorization Code flow with PKCE according to <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> and <span>[<a href="#RFC7636" class="cite xref">RFC7636</a>]</span>.<a href="#section-5.2.2.3-2" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.3-3">If the client expects the frequency of this error response to be high,
+error response as defined above with the <code>redirect_to_web</code> error code.<a href="#section-5.2.2.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.4-2">In this case, the client is expected to initiate a new OAuth
+Authorization Code flow with PKCE according to <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> and <span>[<a href="#RFC7636" class="cite xref">RFC7636</a>]</span>.<a href="#section-5.2.2.4-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.4-3">If the client expects the frequency of this error response to be high,
 the client <span class="bcp14">MAY</span> include a PKCE <span>[<a href="#RFC7636" class="cite xref">RFC7636</a>]</span> <code>code_challenge</code> in the initial authorization
 challenge request. This enables the authorization server to essentially treat
 the authorization challenge request as a PAR <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> request, and
 return the <code>request_uri</code> and <code>expires_in</code> as defined by <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> in the error response.
 The client then uses the <code>request_uri</code> value to build an authorization request
-as defined in <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> Section 4.<a href="#section-5.2.2.3-3" class="pilcrow">¶</a></p>
+as defined in <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> Section 4.<a href="#section-5.2.2.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
