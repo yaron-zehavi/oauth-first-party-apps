@@ -647,11 +647,16 @@ Table of Contents
    _federated_response_ accordingly, and provides the _federation_uri_
    response parameter.
 
+   Authorization server identifies it has been federated to, through the
+   presence of the redirect_uri parameter.  If redirect_uri has been
+   provided, authorization server provides a federating response where
+   _federation_uri_ is the provided redirect_uri.
+
    Client MUST call the federation_uri as a _native authorization
    endpoint_, using the query string parameters as application/x-www-
    form-urlencoded request body.
 
-   Example federating response:
+   Example *federating* response:
 
    HTTP/1.1 400 Bad Request
    Content-Type: application/json
@@ -672,8 +677,8 @@ Table of Contents
    client_id=s6BhdRkqt3&request_uri=
    urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX
 
-   Example response to an authorization server, which federated to the
-   current authorization server:
+   Example *response to an authorization server, which federated to the
+   current authorization server*:
 
    HTTP/1.1 400 Bad Request
    Content-Type: application/json
@@ -695,12 +700,13 @@ Table of Contents
 
    Client SHALL compile during each flow an Allowlist of DNS domains of
    all _federation_uri_ it encounters, which were returned with error
-   code _federate_, to be used for validation in the response handling
-   phase, which is:
+   code _federate_, to be used for validation in the *response handling
+   phase*, which begins:
 
-   *  After being invoked on its native_callback_uri, if provided.
+   *  Once client has been invoked on its native_callback_uri (if
+      provided).
 
-   *  After receiving the error code _federated_response_.
+   *  Once client has received the error code _federated_response_.
 
 5.2.2.2.  Redirect to app response
 

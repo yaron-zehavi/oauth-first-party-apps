@@ -1901,10 +1901,14 @@ is JSON and conforms to <code>application/&lt;AS-defined&gt;+json</code>.<a href
 or to respond to an authorization server which has federated to it, it responds with
 error code <em>federate</em> or <em>federated_response</em> accordingly, and provides the
 <em>federation_uri</em> response parameter.<a href="#section-5.2.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.1-2">Client <span class="bcp14">MUST</span> call the federation_uri as a <em>native authorization endpoint</em>,
-using the query string parameters as application/x-www-form-urlencoded request body.<a href="#section-5.2.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.1-3">Example federating response:<a href="#section-5.2.2.1-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.1-4">
+<p id="section-5.2.2.1-2">Authorization server identifies it has been federated to, through the presence
+of the redirect_uri parameter. If redirect_uri has been provided,
+authorization server provides a federating response where <em>federation_uri</em>
+is the provided redirect_uri.<a href="#section-5.2.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-3">Client <span class="bcp14">MUST</span> call the federation_uri as a <em>native authorization endpoint</em>,
+using the query string parameters as application/x-www-form-urlencoded request body.<a href="#section-5.2.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-4">Example <strong>federating</strong> response:<a href="#section-5.2.2.1-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.1-5">
 <pre>
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -1915,10 +1919,10 @@ Content-Type: application/json
     client_id=s6BhdRkqt3request_uri=
     urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
 }
-</pre><a href="#section-5.2.2.1-4" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.1-5" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-5">Following which, the client calls <em>federation_uri</em>:<a href="#section-5.2.2.1-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.1-6">
+<p id="section-5.2.2.1-6">Following which, the client calls <em>federation_uri</em>:<a href="#section-5.2.2.1-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.1-7">
 <pre>
 POST /native-redirect HTTP/1.1
 Host: next-as.com
@@ -1926,10 +1930,10 @@ Content-Type: application/x-www-form-urlencoded
 
 client_id=s6BhdRkqt3&amp;request_uri=
 urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX
-</pre><a href="#section-5.2.2.1-6" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.1-7" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-7">Example response to an authorization server, which federated to the current authorization server:<a href="#section-5.2.2.1-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.1-8">
+<p id="section-5.2.2.1-8">Example <strong>response to an authorization server, which federated to the current authorization server</strong>:<a href="#section-5.2.2.1-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.1-9">
 <pre>
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -1939,10 +1943,10 @@ Content-Type: application/json
     "federation_uri": "https://prev-as.com/native-redirect?
     authorization_code=uY29tL2F1dGhlbnRpY&amp;state=xyz"
 }
-</pre><a href="#section-5.2.2.1-8" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.1-9" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-9">Following which, the client calls <em>federation_uri</em>:<a href="#section-5.2.2.1-9" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.1-10">
+<p id="section-5.2.2.1-10">Following which, the client calls <em>federation_uri</em>:<a href="#section-5.2.2.1-10" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.1-11">
 <pre>
 POST /native-redirect HTTP/1.1
 Host: prev-as.com
@@ -1950,15 +1954,16 @@ Content-Type: application/x-www-form-urlencoded
 
 authorization_code=uY29tL2F1dGhlbnRpY
 &amp;state=xyz
-</pre><a href="#section-5.2.2.1-10" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.1-11" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-11">Client <span class="bcp14">SHALL</span> compile during each flow an Allowlist of DNS domains of all <em>federation_uri</em> it encounters, which were returned with error code <em>federate</em>, to be used for validation in the response handling phase, which is:<a href="#section-5.2.2.1-11" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-12">Client <span class="bcp14">SHALL</span> compile during each flow an Allowlist of DNS domains of all <em>federation_uri</em> it encounters,
+which were returned with error code <em>federate</em>, to be used for validation in the <strong>response handling phase</strong>, which begins:<a href="#section-5.2.2.1-12" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.2.2.1-12.1">
-                <p id="section-5.2.2.1-12.1.1">After being invoked on its native_callback_uri, if provided.<a href="#section-5.2.2.1-12.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.2.2.1-13.1">
+                <p id="section-5.2.2.1-13.1.1">Once client has been invoked on its native_callback_uri (if provided).<a href="#section-5.2.2.1-13.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-5.2.2.1-12.2">
-                <p id="section-5.2.2.1-12.2.1">After receiving the error code <em>federated_response</em>.<a href="#section-5.2.2.1-12.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-5.2.2.1-13.2">
+                <p id="section-5.2.2.1-13.2.1">Once client has received the error code <em>federated_response</em>.<a href="#section-5.2.2.1-13.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </section>
