@@ -1786,7 +1786,7 @@ See <a href="#insufficient-information" class="auto internal xref">Section 5.2.2
                 <dd style="margin-left: 1.5em" id="section-5.2.2-2.2.2.16">
                   <p id="section-5.2.2-2.2.2.16.1">The Authorization Server wishes to federate processing to another
 authorization server, which it is a client of. This response <span class="bcp14">MUST</span>
-include the <em>federated_native_request_uri</em> response parameter.
+include the <em>federation_uri</em> response parameter.
 See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2-2.2.2.16.1" class="pilcrow">¶</a></p>
 </dd>
                 <dd class="break"></dd>
@@ -1794,7 +1794,7 @@ See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a
                 <dd style="margin-left: 1.5em" id="section-5.2.2-2.2.2.18">
                   <p id="section-5.2.2-2.2.2.18.1">The Authorization Server wishes to respond to an authorization
 server, which has federated to it. This response <span class="bcp14">MUST</span> include
-the <em>federated_native_request_uri</em> response parameter.
+the <em>federation_uri</em> response parameter.
 See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2-2.2.2.18.1" class="pilcrow">¶</a></p>
 </dd>
                 <dd class="break"></dd>
@@ -1802,7 +1802,7 @@ See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a
                 <dd style="margin-left: 1.5em" id="section-5.2.2-2.2.2.20">
                   <p id="section-5.2.2-2.2.2.20.1">The Authorization Server wishes to fulfill the user interaction
 using another native app. This response <span class="bcp14">MUST</span> include the
-<em>federated_native_request_uri</em> response parameter.
+<em>federation_uri</em> response parameter.
 See <a href="#redirect-to-app-response" class="auto internal xref">Section 5.2.2.2</a> for details.<a href="#section-5.2.2-2.2.2.20.1" class="pilcrow">¶</a></p>
 </dd>
                 <dd class="break"></dd>
@@ -1862,7 +1862,7 @@ endpoint if it receives one along with the error response.<a href="#section-5.2.
               <p id="section-5.2.2-2.10.1"><span class="bcp14">OPTIONAL</span>.  A request URI as described by <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> Section 2.2.<a href="#section-5.2.2-2.10.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
-<dt id="section-5.2.2-2.11">"federated_native_request_uri":</dt>
+<dt id="section-5.2.2-2.11">"federation_uri":</dt>
             <dd style="margin-left: 1.5em" id="section-5.2.2-2.12">
               <p id="section-5.2.2-2.12.1"><span class="bcp14">OPTIONAL</span>.  A request URI towards the Native Authorization Endpoint of
 a downstream authorization server, with the request parameters according
@@ -1898,10 +1898,10 @@ is JSON and conforms to <code>application/&lt;AS-defined&gt;+json</code>.<a href
 <a href="#section-5.2.2.1" class="section-number selfRef">5.2.2.1. </a><a href="#name-federating-response" class="section-name selfRef">Federating Response</a>
             </h5>
 <p id="section-5.2.2.1-1">If the authorization server decides to federate to another authorization server,
-or respond to an authorization server which has federated to it, it responds with
+or to respond to an authorization server which has federated to it, it responds with
 error code <em>federate</em> or <em>federated_response</em> accordingly, and provides the
-<em>federated_native_request_uri</em> response parameter.<a href="#section-5.2.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.1-2">Client <span class="bcp14">MUST</span> call the federated_native_request_uri as a <em>native authorization endpoint</em>,
+<em>federation_uri</em> response parameter.<a href="#section-5.2.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-2">Client <span class="bcp14">MUST</span> call the federation_uri as a <em>native authorization endpoint</em>,
 using the query string parameters as application/x-www-form-urlencoded request body.<a href="#section-5.2.2.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.2.2.1-3">Example federating response:<a href="#section-5.2.2.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2.2.1-4">
@@ -1911,13 +1911,13 @@ Content-Type: application/json
 
 {
     "error": "federate",
-    "federated_native_request_uri": "https://next-as.com/native-redirect?
-    client_id=s6BhdRkqt3&amp;request_uri=
+    "federation_uri": "https://next-as.com/native-redirect?
+    client_id=s6BhdRkqt3request_uri=
     urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
 }
 </pre><a href="#section-5.2.2.1-4" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-5">Following which, the client calls <em>federated_native_request_uri</em>:<a href="#section-5.2.2.1-5" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-5">Following which, the client calls <em>federation_uri</em>:<a href="#section-5.2.2.1-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2.2.1-6">
 <pre>
 POST /native-redirect HTTP/1.1
@@ -1936,12 +1936,12 @@ Content-Type: application/json
 
 {
     "error": "federated_response",
-    "federated_native_request_uri": "https://prev-as.com/native-redirect?
+    "federation_uri": "https://prev-as.com/native-redirect?
     authorization_code=uY29tL2F1dGhlbnRpY&amp;state=xyz"
 }
 </pre><a href="#section-5.2.2.1-8" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-9">Following which, the client calls <em>federated_native_request_uri</em>:<a href="#section-5.2.2.1-9" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-9">Following which, the client calls <em>federation_uri</em>:<a href="#section-5.2.2.1-9" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2.2.1-10">
 <pre>
 POST /native-redirect HTTP/1.1
@@ -1952,7 +1952,7 @@ authorization_code=uY29tL2F1dGhlbnRpY
 &amp;state=xyz
 </pre><a href="#section-5.2.2.1-10" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-11">Client <span class="bcp14">SHALL</span> compile during each flow an Allowlist of DNS domains of all <em>federated_native_request_uri</em> it encounters, which were returned with error code <em>federate</em>, to be used for validation in the response handling phase, which is:<a href="#section-5.2.2.1-11" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-11">Client <span class="bcp14">SHALL</span> compile during each flow an Allowlist of DNS domains of all <em>federation_uri</em> it encounters, which were returned with error code <em>federate</em>, to be used for validation in the response handling phase, which is:<a href="#section-5.2.2.1-11" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.2.2.1-12.1">
                 <p id="section-5.2.2.1-12.1.1">After being invoked on its native_callback_uri, if provided.<a href="#section-5.2.2.1-12.1.1" class="pilcrow">¶</a></p>
@@ -1970,8 +1970,8 @@ authorization_code=uY29tL2F1dGhlbnRpY
             </h5>
 <p id="section-5.2.2.2-1">If the authorization server decides to use another native app to interact with
 end user, it responds with error code <em>redirect_to_app</em> and provides the
-<em>federated_native_request_uri</em> response parameter.<a href="#section-5.2.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.2-2">Client <span class="bcp14">MUST</span> call the federated_native_request_uri as a <em>native authorization endpoint</em>,
+<em>federation_uri</em> response parameter.<a href="#section-5.2.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.2-2">Client <span class="bcp14">MUST</span> call the federation_uri as a <em>native authorization endpoint</em>,
 using the query string parameters as application/x-www-form-urlencoded request body.<a href="#section-5.2.2.2-2" class="pilcrow">¶</a></p>
 <p id="section-5.2.2.2-3">Example redirect_to_app response:<a href="#section-5.2.2.2-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2.2.2-4">
@@ -1981,13 +1981,13 @@ Content-Type: application/json
 
 {
     "error": "redirect_to_app",
-    "federated_native_request_uri": "https://next-as.com/native-redirect?
+    "federation_uri": "https://next-as.com/native-redirect?
     client_id=s6BhdRkqt3&amp;request_uri=
     urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
 }
 </pre><a href="#section-5.2.2.2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.2-5">Following which, client <span class="bcp14">MUST</span> use OS mechanisms to invoke the deep link received in <em>federated_native_request_uri</em>. If no app claiming federated_native_request_uri is found,
+<p id="section-5.2.2.2-5">Following which, client <span class="bcp14">MUST</span> use OS mechanisms to invoke the deep link received in <em>federation_uri</em>. If no app claiming federation_uri is found,
 <em>Client App</em> <span class="bcp14">MUST</span> terminate the flow and <span class="bcp14">MAY</span> attempt a normal non-native OAuth flow.<a href="#section-5.2.2.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
