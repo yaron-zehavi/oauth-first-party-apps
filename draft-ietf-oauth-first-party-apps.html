@@ -1971,44 +1971,44 @@ authorization_code=uY29tL2F1dGhlbnRpY
 <a href="#section-5.2.2.2" class="section-number selfRef">5.2.2.2. </a><a href="#name-redirect-to-app-response" class="section-name selfRef">Redirect to app response</a>
             </h5>
 <p id="section-5.2.2.2-1">If the authorization server decides to use another native app to interact with
-end user, it responds with error code <em>redirect_to_app</em> and provides the
-<em>federation_uri</em> response parameter.<a href="#section-5.2.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.2-2">Client <span class="bcp14">MUST</span> call the federation_uri as a <em>native authorization endpoint</em>,
-using the query string parameters as application/x-www-form-urlencoded request body.<a href="#section-5.2.2.2-2" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.2-3">Example redirect_to_app response:<a href="#section-5.2.2.2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.2-4">
+end user, it responds with error code <em>redirect_to_app</em> and <span class="bcp14">MUST</span> return the
+<em>deep_link</em>, <em>response_uri</em> and <em>auth_session</em> response attributes.<a href="#section-5.2.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.2-2">Example <strong>redirect_to_app</strong> response:<a href="#section-5.2.2.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.2-3">
 <pre>
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
 
 {
     "error": "redirect_to_app",
+    "auth_session": "ce6772f5e07bc8361572f",
+    "response_uri": "https://prev-as.com/native-authorization",
     "deep_link": "https://next-as.com/native-authorization?
-    client_id=s6BhdRkqt3&amp;request_uri=
-    urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+      client_id=s6BhdRkqt3&amp;request_uri=
+      urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
 }
-</pre><a href="#section-5.2.2.2-4" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.2-3" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.2-5">Following which, client <span class="bcp14">MUST</span> use OS mechanisms to invoke the obtained deep_link.
+<p id="section-5.2.2.2-4">Client <span class="bcp14">MUST</span> use OS mechanisms to invoke the obtained deep_link.
 If no app claiming deep_link is found on the device, client <span class="bcp14">MUST</span> terminate the
-flow and <span class="bcp14">MAY</span> attempt a normal non-native OAuth flow.<a href="#section-5.2.2.2-5" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.2-6">The app that received the redirect handles the native authorization request:<a href="#section-5.2.2.2-6" class="pilcrow">¶</a></p>
+flow and <span class="bcp14">MAY</span> attempt a normal non-native OAuth flow.<a href="#section-5.2.2.2-4" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.2-5">The app that received the redirect handles the native authorization request:<a href="#section-5.2.2.2-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.2.2.2-7.1">
-                <p id="section-5.2.2.2-7.1.1">Validates the request and ensures it contains a <em>native_callback_uri</em>, Otherwise terminates the flow.<a href="#section-5.2.2.2-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.2.2.2-6.1">
+                <p id="section-5.2.2.2-6.1.1">Validates the request and ensures it contains a <em>native_callback_uri</em>, Otherwise terminates the flow.<a href="#section-5.2.2.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-5.2.2.2-7.2">
-                <p id="section-5.2.2.2-7.2.1">Establishes trust in <em>native_callback_uri</em> and validates that an app claiming it is on the device. Otherwise terminates the flow.<a href="#section-5.2.2.2-7.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-5.2.2.2-6.2">
+                <p id="section-5.2.2.2-6.2.1">Establishes trust in <em>native_callback_uri</em> and validates that an app claiming it is on the device. Otherwise terminates the flow.<a href="#section-5.2.2.2-6.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-5.2.2.2-7.3">
-                <p id="section-5.2.2.2-7.3.1">Authenticates end-user and authorizes the request.<a href="#section-5.2.2.2-7.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-5.2.2.2-6.3">
+                <p id="section-5.2.2.2-6.3.1">Authenticates end-user and authorizes the request.<a href="#section-5.2.2.2-6.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-5.2.2.2-7.4">
-                <p id="section-5.2.2.2-7.4.1"><span class="bcp14">MUST</span> use OS mechanisms to invoke <em>native_callback_uri</em> and return to the client, providing it a response according to this spec as url-encoded query parameters.<a href="#section-5.2.2.2-7.4.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-5.2.2.2-6.4">
+                <p id="section-5.2.2.2-6.4.1"><span class="bcp14">MUST</span> use OS mechanisms to invoke <em>native_callback_uri</em> and return to the client, providing it a response according to this spec as url-encoded query parameters.<a href="#section-5.2.2.2-6.4.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-5.2.2.2-8">When the client is invoked on its native_callback_uri, it shall handle the response parameters as it
-would handle a response from a federated authorization server. See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2.2-8" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.2-7">When the client is invoked on its native_callback_uri, it shall handle the response parameters as it
+would handle a response from a federated authorization server. See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="insufficient-information">
