@@ -1933,13 +1933,13 @@ urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX
 to determine if it <span class="bcp14">SHOULD</span> request authorization challenges when being federated to.<a href="#section-5.2.2.1-6" class="pilcrow">¶</a></p>
 <p id="section-5.2.2.1-7">The client <span class="bcp14">MUST</span> provide any response obtained from the <strong>federated</strong> authorization server,
 as application/x-www-form-urlencoded request body for the <em>response_uri</em> of the respective
-<strong>federating</strong> authorization server which <span class="bcp14">SHALL</span> be invoked using HTTP POST,
-except when <strong>federated</strong> authorization server has returned the following error codes:
+<strong>federating</strong> authorization server which <span class="bcp14">SHALL</span> be invoked using HTTP POST.<a href="#section-5.2.2.1-7" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-8">Except when <strong>federated</strong> authorization server has returned the following error codes:
 <em>insufficient_authorization</em>, <em>insufficient_information</em>, <em>redirect_to_app</em>, <em>redirect_to_web</em>,
-in which case the client <span class="bcp14">MUST</span> handle these errors according to this specification.<a href="#section-5.2.2.1-7" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.1-8">Example client calling receiving an {#authorization-code-response} from the federated
-authorization server:<a href="#section-5.2.2.1-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.1-9">
+in which case the client <span class="bcp14">MUST</span> handle these errors according to this specification.<a href="#section-5.2.2.1-8" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-9">Example client calling receiving an {#authorization-code-response} from the federated
+authorization server:<a href="#section-5.2.2.1-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.1-10">
 <pre>
 HTTP/1.1 200 OK
 Server: next-as.com
@@ -1949,11 +1949,11 @@ Cache-Control: no-store
 {
   "authorization_code": "uY29tL2F1dGhlbnRpY"
 }
-</pre><a href="#section-5.2.2.1-9" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.1-10" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.1-10">And providing it to the federating authorization server's response_uri,
-adding previously obtained auth_session:<a href="#section-5.2.2.1-10" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.1-11">
+<p id="section-5.2.2.1-11">And providing it to the federating authorization server's response_uri,
+adding previously obtained auth_session:<a href="#section-5.2.2.1-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.1-12">
 <pre>
 POST /native-authorization HTTP/1.1
 Host: prev-as.com
@@ -1961,7 +1961,7 @@ Content-Type: application/x-www-form-urlencoded
 
 authorization_code=uY29tL2F1dGhlbnRpY
 &amp;auth_session=ce6772f5e07bc8361572f
-</pre><a href="#section-5.2.2.1-11" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.1-12" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2004,7 +2004,7 @@ flow and <span class="bcp14">MAY</span> attempt a normal non-native OAuth flow.<
                 <p id="section-5.2.2.2-6.3.1">Authenticates end-user and authorizes the request.<a href="#section-5.2.2.2-6.3.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-5.2.2.2-6.4">
-                <p id="section-5.2.2.2-6.4.1"><span class="bcp14">MUST</span> use OS mechanisms to invoke <em>native_callback_uri</em> and return to the client, providing it a response according to this spec as url-encoded query parameters.<a href="#section-5.2.2.2-6.4.1" class="pilcrow">¶</a></p>
+                <p id="section-5.2.2.2-6.4.1"><span class="bcp14">MUST</span> use OS mechanisms to invoke <em>native_callback_uri</em> and return to the client, providing it a response whose contents is according to this specification for the response of a Native Authorization Endpoint, as url-encoded query parameters.<a href="#section-5.2.2.2-6.4.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 <p id="section-5.2.2.2-7">When the client is invoked on its native_callback_uri, it shall handle the response parameters as it
