@@ -5,10 +5,10 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                                      Okta
 Intended status: Standards Track                             G. Fletcher
-Expires: 24 May 2026                               Capital One Financial
+Expires: 25 May 2026                               Capital One Financial
                                                             P. Kasselman
                                                         Defakto Security
-                                                        20 November 2025
+                                                        21 November 2025
 
 
                  OAuth 2.0 for First-Party Applications
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 May 2026.
+   This Internet-Draft will expire on 25 May 2026.
 
 Copyright Notice
 
@@ -157,8 +157,8 @@ Table of Contents
    indicate that the client can continue to prompt the user for more
    information, should federate the request to a downstream
    Authorization Server by invoking their Native Authorization Endpoint,
-   or can indicate that the client needs to launch a browser to have the
-   user complete the flow in a browser.
+   or can indicate that the client needs to launch another app or a
+   browser to have the user complete the flow in a browser.
 
    The Native Authorization Endpoint is used to initiate the OAuth flow
    in place of redirecting or launching a browser to the authorization
@@ -393,8 +393,8 @@ Table of Contents
    The native authorization endpoint also accepts the
    _native_callback_uri_ parameter.
 
-   Authorization servers intending to federate a native authorization
-   request to a downstream authorization server, MUST ensure it offers a
+   When authorization servers intend to federate to a downstream
+   authorization server, they MUST ensure it offers a
    _native_authorization_endpoint_, otherwise return the error
    _native_authorization_unsupported_.
 
@@ -456,12 +456,12 @@ Table of Contents
       defined by [RFC7636].  See Section 5.2.2.4 for details.
 
    "native_callback_uri":  OPTIONAL.  Native client app's redirect_uri,
-      claimed as deep link. _native_callback_uri_ is invoked by
-      authorization server's user-interacting app to provide its
-      response.  If native_callback_uri is included in a native
-      authorization request, authorization server MUST include the
-      native_callback_uri when federating to any other authorization
-      server.
+      claimed as deep link. _native_callback_uri_ MAY be invoked by
+      authorization server's user-interacting app to natively switch to
+      client app to provide its response.  If native_callback_uri is
+      included in a native authorization request, authorization server
+      MUST include the native_callback_uri when federating to another
+      authorization server.
 
    Specific implementations as well as extensions to this specification
    MAY define additional parameters to be used at this endpoint.
@@ -546,14 +546,14 @@ Table of Contents
          client take additional steps to complete the authorization.
 
       "insufficient_information":  the Authorization Server requires
-         additional user input, which is not an authentication
-         challenge, for example to determine the target authorization
-         server to federate to.  See Section 5.2.2.3 for details.
+         additional user input, other than an authentication challenge,
+         to determine the target authorization server to federate to.
+         See Section 5.2.2.3 for details.
 
-      "federate":  The Authorization Server wishes to federate
-         processing to another authorization server, which it is a
-         client of.  This response MUST include the _federation_uri_
-         response parameter.  See Section 5.2.2.1 for details.
+      "federate":  The Authorization Server wishes to federate to
+         another authorization server, which it is a client of.  This
+         response MUST include the _federation_uri_ response parameter.
+         See Section 5.2.2.1 for details.
 
       "redirect_to_app":  The Authorization Server wishes to fulfill the
          user interaction using another native app.  This response MUST
@@ -751,7 +751,7 @@ Table of Contents
 5.2.2.3.  Additional Information Required Response
 
    If additional user input is required, for example to determine where
-   to federate to, The response body shall contain the following
+   to federate to, the response body shall contain the following
    additional properties:
 
    logo:  OPTIONAL.  URL or base64-encoded logo of _Authorization
@@ -792,7 +792,7 @@ Table of Contents
       -  description: OPTIONAL.  A string holding the input's
          description.
 
-   Example of prompting end-user for 2 multiple-choice inputs:
+   Example of requesting end-user for 2 multiple-choice inputs:
 
    HTTP/1.1 400 Bad Request
    Content-Type: application/json
@@ -831,7 +831,7 @@ Table of Contents
        }
    }
 
-   Example of prompting end-user for text input entry:
+   Example of requesting end-user for text input entry (email):
 
    HTTP/1.1 400 Bad Request
    Content-Type: application/json
