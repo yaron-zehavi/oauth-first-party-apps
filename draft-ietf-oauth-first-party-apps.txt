@@ -606,11 +606,11 @@ Table of Contents
       the request.
 
    "federation_body":  OPTIONAL.  A string of application/x-www-form-
-      urlencoded encoded request parameters according to this
-      specification for the downstream authorization server's Native
-      Authorization Endpoint.
+      urlencoded request parameters according to this specification for
+      the downstream authorization server's Native Authorization
+      Endpoint.
 
-   "response_uri":  OPTIONAL.  A URI of an endpoint of the federating
+   "response_uri":  OPTIONAL.  A URI of an endpoint of federating
       authorization server which shall receive the response from the
       federated authorization server.
 
