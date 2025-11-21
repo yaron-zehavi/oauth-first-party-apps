@@ -748,7 +748,7 @@ Table of Contents
       Endpoint, as url-encoded query parameters.
 
    Note - trust establishment mechanisms in _native_callback_uri_ are
-   out of scope of this specification.  However we note that closed
+   out of scope of this specification.  However we assume closed
    ecosystems could employ an allowList, and open ecosystems could
    leverage [OpenID.Federation]:
 
