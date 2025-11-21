@@ -2009,6 +2009,23 @@ flow and <span class="bcp14">MAY</span> attempt a normal non-native OAuth flow.<
             </ul>
 <p id="section-5.2.2.2-7">When the client is invoked on its native_callback_uri, it shall handle the response parameters as it
 would handle a response from a federated authorization server. See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2.2-7" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.2-8">Example URI used to invoke of client app on its claimed native_callback_uri:<a href="#section-5.2.2.2-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.2-9">
+<pre>
+https://client.example.com/cb?authorization_code=uY29tL2F1dGhlbnRpY
+</pre><a href="#section-5.2.2.2-9" class="pilcrow">¶</a>
+</div>
+<p id="section-5.2.2.2-10">Example client invoking the response_uri of the authorization server which redirected it to the app:<a href="#section-5.2.2.2-10" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.2-11">
+<pre>
+POST /native-authorization HTTP/1.1
+Host: prev-as.com
+Content-Type: application/x-www-form-urlencoded
+
+authorization_code=uY29tL2F1dGhlbnRpY
+&amp;auth_session=ce6772f5e07bc8361572f
+</pre><a href="#section-5.2.2.2-11" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="insufficient-information">
