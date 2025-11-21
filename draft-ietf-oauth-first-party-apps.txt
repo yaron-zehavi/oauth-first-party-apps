@@ -747,6 +747,19 @@ Table of Contents
       to this specification for the response of a Native Authorization
       Endpoint, as url-encoded query parameters.
 
+   Note - trust establishment mechanisms in _native_callback_uri_ are
+   out of scope of this specification.  However we note that closed
+   ecosystems could employ an allowList, and open ecosystems could
+   leverage [OpenID.Federation]:
+
+   *  Extract native_callback_uri's DNS domain.
+
+   *  Add the path /.well-known/openid-federation and perform trust
+      chain resolution.
+
+   *  Inspect client's metadata for redirect_uri's and validate
+      *native_callback_uri* is included among them.
+
    When the client is invoked on its native_callback_uri, it shall
    handle the response parameters as it would handle a response from a
    federated authorization server.  See Section 5.2.2.1 for details.
@@ -1368,6 +1381,12 @@ Table of Contents
    [OpenID]   Sakimura, N., Bradley, J., Jones, M., de Medeiros, B., and
               C. Mortimore, "OpenID Connect Core 1.0", November 2014,
               <https://openid.net/specs/openid-connect-core-1_0.html>.
+
+   [OpenID.Federation]
+              Hedberg, Ed, R., Jones, M. B., Solberg, A. A., Bradley,
+              J., De Marco, G., and V. Dzhuvinov, "OpenID Federation
+              1.0", March 2025,
+              <https://openid.net/specs/openid-federation-1_0.html>.
 
    [OpenID.Native-SSO]
               Fletcher, G., "OpenID Connect Native SSO for Mobile Apps",

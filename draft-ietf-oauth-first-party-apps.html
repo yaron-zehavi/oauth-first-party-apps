@@ -2007,16 +2007,30 @@ flow and <span class="bcp14">MAY</span> attempt a normal non-native OAuth flow.<
                 <p id="section-5.2.2.2-6.4.1"><span class="bcp14">MUST</span> use OS mechanisms to invoke <em>native_callback_uri</em> and return to the client, providing it a response whose contents is according to this specification for the response of a Native Authorization Endpoint, as url-encoded query parameters.<a href="#section-5.2.2.2-6.4.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-5.2.2.2-7">When the client is invoked on its native_callback_uri, it shall handle the response parameters as it
-would handle a response from a federated authorization server. See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2.2-7" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.2-8">Example URI used to invoke of client app on its claimed native_callback_uri:<a href="#section-5.2.2.2-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.2-9">
+<p id="section-5.2.2.2-7">Note - trust establishment mechanisms in <em>native_callback_uri</em> are out of scope of this specification.
+However we note that closed ecosystems could employ an allowList, and open ecosystems could leverage
+<span>[<a href="#OpenID.Federation" class="cite xref">OpenID.Federation</a>]</span>:<a href="#section-5.2.2.2-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2.2.2-8.1">
+                <p id="section-5.2.2.2-8.1.1">Extract native_callback_uri's DNS domain.<a href="#section-5.2.2.2-8.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.2.2.2-8.2">
+                <p id="section-5.2.2.2-8.2.1">Add the path /.well-known/openid-federation and perform trust chain resolution.<a href="#section-5.2.2.2-8.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.2.2.2-8.3">
+                <p id="section-5.2.2.2-8.3.1">Inspect client's metadata for redirect_uri's and validate <strong>native_callback_uri</strong> is included among them.<a href="#section-5.2.2.2-8.3.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+<p id="section-5.2.2.2-9">When the client is invoked on its native_callback_uri, it shall handle the response parameters as it
+would handle a response from a federated authorization server. See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2.2-9" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.2-10">Example URI used to invoke of client app on its claimed native_callback_uri:<a href="#section-5.2.2.2-10" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.2-11">
 <pre>
 https://client.example.com/cb?authorization_code=uY29tL2F1dGhlbnRpY
-</pre><a href="#section-5.2.2.2-9" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.2-11" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.2-10">Example client invoking the response_uri of the authorization server which redirected it to the app:<a href="#section-5.2.2.2-10" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2.2-11">
+<p id="section-5.2.2.2-12">Example client invoking the response_uri of the authorization server which redirected it to the app:<a href="#section-5.2.2.2-12" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2.2-13">
 <pre>
 POST /native-authorization HTTP/1.1
 Host: prev-as.com
@@ -2024,7 +2038,7 @@ Content-Type: application/x-www-form-urlencoded
 
 authorization_code=uY29tL2F1dGhlbnRpY
 &amp;auth_session=ce6772f5e07bc8361572f
-</pre><a href="#section-5.2.2.2-11" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2.2-13" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2559,6 +2573,10 @@ an authorization request and eventually obtain an authorization code.<a href="#s
 <dt id="OpenID">[OpenID]</dt>
         <dd>
 <span class="refAuthor">Sakimura, N.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">de Medeiros, B.</span>, and <span class="refAuthor">C. Mortimore</span>, <span class="refTitle">"OpenID Connect Core 1.0"</span>, <time datetime="2014-11" class="refDate">November 2014</time>, <span>&lt;<a href="https://openid.net/specs/openid-connect-core-1_0.html">https://openid.net/specs/openid-connect-core-1_0.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="OpenID.Federation">[OpenID.Federation]</dt>
+        <dd>
+<span class="refAuthor">Hedberg, Ed, R.</span>, <span class="refAuthor">Jones, M. B.</span>, <span class="refAuthor">Solberg, A. A.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">De Marco, G.</span>, and <span class="refAuthor">V. Dzhuvinov</span>, <span class="refTitle">"OpenID Federation 1.0"</span>, <time datetime="2025-03" class="refDate">March 2025</time>, <span>&lt;<a href="https://openid.net/specs/openid-federation-1_0.html">https://openid.net/specs/openid-federation-1_0.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="OpenID.Native-SSO">[OpenID.Native-SSO]</dt>
         <dd>
