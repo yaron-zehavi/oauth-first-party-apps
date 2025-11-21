@@ -602,8 +602,8 @@ Table of Contents
    "federation_uri":  OPTIONAL.  The Native Authorization Endpoint of a
       downstream authorization server to federate to.
 
-   "deep_link":  OPTIONAL.  Https URI of native app to be invoked to
-      handle the request.
+   "deep_link":  OPTIONAL.  A URI of native app to be invoked to handle
+      the request.
 
    "federation_body":  OPTIONAL.  A string of application/x-www-form-
       urlencoded encoded request parameters according to this
