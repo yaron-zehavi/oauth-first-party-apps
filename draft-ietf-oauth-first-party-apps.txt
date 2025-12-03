@@ -127,12 +127,18 @@ Table of Contents
    Appendix A.  Example User Experiences
      A.1.  Passkey
      A.2.  Redirect to Authorization Server
-     A.3.  Passwordless One-Time Password (OTP)
-     A.4.  E-Mail Confirmation Code
-     A.5.  Mobile Confirmation Code
-     A.6.  Re-authenticating to an app a week later using OTP
-     A.7.  Step-up Authentication using Confirmation SMS
-     A.8.  Registration
+     A.3.  Federate and Redirect to App
+       A.3.1.  Diagram
+       A.3.2.  Client makes initial request and is federated
+       A.3.3.  Client calls federated authorization server and is
+               redirected to app
+       A.3.4.  Client calls federating authorization server
+     A.4.  Passwordless One-Time Password (OTP)
+     A.5.  E-Mail Confirmation Code
+     A.6.  Mobile Confirmation Code
+     A.7.  Re-authenticating to an app a week later using OTP
+     A.8.  Step-up Authentication using Confirmation SMS
+     A.9.  Registration
    Appendix B.  Example Implementations
      B.1.  Authorization Challenge Request Parameters
      B.2.  Authorization Challenge Response Parameters
@@ -380,8 +386,8 @@ Table of Contents
    downstream authorization servers, the usage of PAR [RFC9126] with
    client authentication is REQUIRED, as the native client calling the
    Native Authorization Endpoint of a federated authorization server is
-   not an OAuth client and therefore cannot authenticate to the Native
-   Authorization Endpoint.  See Section 9.4 for more details.
+   not _its_ OAuth client and therefore cannot authenticate to the
+   Native Authorization Endpoint.  See Section 9.4 for more details.
 
    Authorization servers supporting this specification SHOULD include
    the URL of their native authorization endpoint in their authorization
@@ -724,10 +730,9 @@ Table of Contents
 
 5.2.2.2.  Redirect to app response
 
-   If the authorization server decides to use another native app to
-   interact with end user, it responds with error code _redirect_to_app_
-   and MUST return the _deep_link_, _response_uri_ and _auth_session_
-   response attributes.
+   If the authorization server decides to use a native app to interact
+   with end user, it responds with error code _redirect_to_app_ and MUST
+   return the _deep_link_ response attribute.
 
    Example *redirect_to_app* response:
 
@@ -736,8 +741,6 @@ Table of Contents
 
  {
      "error": "redirect_to_app",
-     "auth_session": "ce6772f5e07bc8361572f",
-     "response_uri": "https://prev-as.com/native-authorization",
      "deep_link": "https://next-as.com/native-authorization?
        client_id=s6BhdRkqt3&request_uri=
        urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
@@ -747,8 +750,7 @@ Table of Contents
    no app claiming deep_link is found on the device, client MUST
    terminate the flow and MAY attempt a normal non-native OAuth flow.
 
-   The app that received the redirect handles the native authorization
-   request:
+   The invoked app handles the native authorization request:
 
    *  Validates the request and ensures it contains a
       _native_callback_uri_, Otherwise terminates the flow.
@@ -758,10 +760,10 @@ Table of Contents
 
    *  Authenticates end-user and authorizes the request.
 
-   *  MUST use OS mechanisms to invoke _native_callback_uri_ and return
-      to the client, providing it a response whose contents is according
-      to this specification for the response of a Native Authorization
-      Endpoint, as url-encoded query parameters.
+   *  Uses OS mechanisms to natively invoke _native_callback_uri_ and
+      return to the client, providing it a response according to this
+      specification's response from a Native Authorization Endpoint, as
+      url-encoded query parameters.
 
    Note - trust establishment mechanisms in _native_callback_uri_ are
    out of scope of this specification.  However we assume closed
@@ -776,9 +778,10 @@ Table of Contents
    *  Inspect client's metadata for redirect_uri's and validate
       *native_callback_uri* is included among them.
 
-   When the client is invoked on its native_callback_uri, it shall
-   handle the response parameters as it would handle a response from a
-   federated authorization server.  See Section 5.2.2.1 for details.
+   When the client is natively invoked on its native_callback_uri, it
+   shall handle the response parameters as it would handle a response
+   from a federated authorization server.  See Section 5.2.2.1 for
+   details.
 
    Example URI used to invoke of client app on its claimed
    native_callback_uri:
@@ -1036,7 +1039,7 @@ Table of Contents
    Including the auth_session parameter in the token response enables
    flows such as step-up authentication [RFC9470], so that the
    authorization server can restore the context of a previous session
-   and prompt only for the needed step-up factors.  See Appendix A.7 for
+   and prompt only for the needed step-up factors.  See Appendix A.8 for
    an example application.
 
 6.2.  Token Endpoint Error Response
@@ -1571,7 +1574,65 @@ A.2.  Redirect to Authorization Server
        redirect back to the client, which then exchanges it for an
        access and refresh token.
 
-A.3.  Passwordless One-Time Password (OTP)
+A.3.  Federate and Redirect to App
+
+A.3.1.  Diagram
+
+                                                  +--------------------+
+                                                  |   Authorization    |
+                            (B)Native             |      Server 1      |
+               +----------+ Authorization Request |+------------------+|
+  (A)User  +---|          |---------------------->||     Native       ||
+     Starts|   |          |                       ||  Authorization   ||
+     Flow  +-->|  Client  |<----------------------||    Endpoint      ||
+               |          | (C)Federate Error     |+------------------+|
+               |          |        Response       +--------------------+
+               |          |         :
+               |          |         :             +--------------------+
+               |          |         :             |   Authorization    |
+               |          | (D)Native             |      Server 2      |
+               |          | Authorization Request |+------------------+|
+               |          |---------------------->||     Native       ||
+               |          |                       ||  Authorization   ||
+               |          |<----------------------||    Endpoint      ||
+               |          | (E) Redirect to       |+------------------+|
+               |          |     App Response      +--------------------+
+               |          |         :
+               |          |         :             +--------------------+
+               |          | (F) Invoke App        |                    |
+               |          |---------------------->|   Native App of    |
+               |          |                       |   Auth Server 2    |
+               |          |<----------------------|                    |
+               |          | (G)Authorization code +--------------------+
+               |          |    For Auth Server 1
+               |          |         :             +--------------------+
+               |          |         :             |   Authorization    |
+               |          | (H)Authorization Code |      Server 1      |
+               |          |    For Auth Server 1  |+------------------+|
+               |          |---------------------->||    Response      ||
+               |          |<----------------------||       Uri        ||
+               |          | (I) Authorization     |+------------------+|
+               |          |     Code Response     |                    |
+               |          |         :             |                    |
+               |          |         :             |                    |
+               |          | (J) Token Request     |+------------------+|
+               |          |---------------------->||      Token       ||
+               |          |<----------------------||     Endpoint     ||
+               |          | (K) Access Token      |+------------------+|
+               |          |                       +--------------------+
+               |          |
+               +----------+
+
+   Figure: Client is federated, then redirected to app
+
+A.3.2.  Client makes initial request and is federated
+
+A.3.3.  Client calls federated authorization server and is redirected to
+        app
+
+A.3.4.  Client calls federating authorization server
+
+A.4.  Passwordless One-Time Password (OTP)
 
    In a passwordless One-Time Password (OTP) scheme, the user is in
    possession of a one-time password generator.  This generator may be a
@@ -1596,7 +1657,7 @@ A.3.  Passwordless One-Time Password (OTP)
    5.  The Authorization Server verifies the Authorization Code and
        issues the requested tokens.
 
-A.4.  E-Mail Confirmation Code
+A.5.  E-Mail Confirmation Code
 
    A user may be required to provide an e-mail confirmation code as part
    of an authentication ceremony to prove they control an e-mail
@@ -1650,7 +1711,7 @@ A.4.  E-Mail Confirmation Code
       the Client.  The Client sends the verification code and
       auth_session to the Native Authorization Endpoint.
 
-A.5.  Mobile Confirmation Code
+A.6.  Mobile Confirmation Code
 
    A user may be required to provide a confirmation code as part of an
    authentication ceremony to prove they control a mobile phone number.
@@ -1688,7 +1749,7 @@ A.5.  Mobile Confirmation Code
    7.  The Authorization Server verifies the Authorization Code and
        issues the Access Token and Refresh Token.
 
-A.6.  Re-authenticating to an app a week later using OTP
+A.7.  Re-authenticating to an app a week later using OTP
 
    A client may be in possession of an Access and Refresh Token as the
    result of a previous succesful user authentication.  The user returns
@@ -1736,7 +1797,7 @@ A.6.  Re-authenticating to an app a week later using OTP
    11.  The Client presents the new Access Token to the Resource Server
         in order to access the protected resource.
 
-A.7.  Step-up Authentication using Confirmation SMS
+A.8.  Step-up Authentication using Confirmation SMS
 
    A Client previously obtained an Access and Refresh Token after the
    user authenticated with an OTP.  When the user attempts to access a
@@ -1793,7 +1854,7 @@ A.7.  Step-up Authentication using Confirmation SMS
         which verifies that the acr value meets its requirements before
         granting access to the protected resource.
 
-A.8.  Registration
+A.9.  Registration
 
    This example describes how to use the mechanisms defined in this
    draft to create a complete user registration flow starting with an
