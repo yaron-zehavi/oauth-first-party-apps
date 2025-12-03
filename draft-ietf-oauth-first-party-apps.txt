@@ -91,7 +91,7 @@ Table of Contents
      4.1.  Native Authorization Endpoint
      4.2.  Token endpoint
    5.  Authorization Initiation
-     5.1.  Authorization Challenge Request
+     5.1.  Native Authorization Request
      5.2.  Native Authorization Response
        5.2.1.  Authorization Code Response
        5.2.2.  Error Response
@@ -127,12 +127,15 @@ Table of Contents
    Appendix A.  Example User Experiences
      A.1.  Passkey
      A.2.  Redirect to Authorization Server
-     A.3.  Federate and Redirect to App
+     A.3.  Native client federated, then redirected to app
        A.3.1.  Diagram
-       A.3.2.  Client makes initial request and is federated
+       A.3.2.  Client makes initial request and receives "federate"
+               error
        A.3.3.  Client calls federated authorization server and is
                redirected to app
-       A.3.4.  Client calls federating authorization server
+       A.3.4.  App calls client
+       A.3.5.  Client calls federating authorization server
+       A.3.6.  Client calls its authorization server
      A.4.  Passwordless One-Time Password (OTP)
      A.5.  E-Mail Confirmation Code
      A.6.  Mobile Confirmation Code
@@ -411,7 +414,7 @@ Table of Contents
    When authorization servers intend to federate to a downstream
    authorization server, they MUST ensure it offers a
    _native_authorization_endpoint_, otherwise return the error
-   _native_authorization_unsupported_.
+   _native_authorization_federate_unsupported_.
 
    The client initiates the authorization flow with or without
    information collected from the user (e.g. a signed passkey challenge
@@ -449,7 +452,7 @@ Table of Contents
    before continuing with the authentication flow.  Please see
    Section 9.1 for additional considerations.
 
-5.1.  Authorization Challenge Request
+5.1.  Native Authorization Request
 
    The client makes a request to the native authorization endpoint by
    adding the following parameters, as well as parameters from any
@@ -673,7 +676,7 @@ Table of Contents
      "auth_session": "ce6772f5e07bc8361572f",
      "response_uri": "https://prev-as.com/native-authorization",
      "federation_uri": "https://next-as.com/native-authorization",
-     "federation_body": "client_id=s6BhdRkqt3request_uri=
+     "federation_body": "client_id=s6BhdRkqt3&request_uri=
        urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
  }
 
@@ -1574,7 +1577,7 @@ A.2.  Redirect to Authorization Server
        redirect back to the client, which then exchanges it for an
        access and refresh token.
 
-A.3.  Federate and Redirect to App
+A.3.  Native client federated, then redirected to app
 
 A.3.1.  Diagram
 
@@ -1627,12 +1630,101 @@ A.3.1.  Diagram
 
    Figure: Client is federated, then redirected to app
 
-A.3.2.  Client makes initial request and is federated
+A.3.2.  Client makes initial request and receives "federate" error
+
+   Client calls the native authorization endpoint:
+
+   POST /native-authorization HTTP/1.1
+   Host: as-1.com
+   Content-Type: application/x-www-form-urlencoded
+
+   client_id=t7CieSlru4&native_callback_uri=
+   https://client.example.com/cb
+
+   The first authorization server, as-1.com, decides to federate to as-
+   2.com after validating it supports the native authorization endpoint.
+   If it does not, as-1.com returns:
+
+   Since native authorization endpoint is supported by the federated
+   authorization server, as-1.com performs a PAR [RFC9126] request to
+   as-2.com's pushed authorization endpoint, including the original
+   native_callback_uri:
+
+   POST /par HTTP/1.1
+   Host: as-2.com
+   Content-Type: application/x-www-form-urlencoded
+
+   client_id=s6BhdRkqt3&native_callback_uri=
+   https://client.example.com/cb
+
+   as-1.com receives a request_uri in response, and then responds to
+   client:
+
+ HTTP/1.1 400 Bad Request
+ Content-Type: application/json
+
+ {
+     "error": "federate",
+     "auth_session": "ce6772f5e07bc8361572f",
+     "response_uri": "https://as-1.com/native-authorization",
+     "federation_uri": "https://as-2.com/native-authorization",
+     "federation_body": "client_id=s6BhdRkqt3&request_uri=
+       urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+ }
 
 A.3.3.  Client calls federated authorization server and is redirected to
         app
 
-A.3.4.  Client calls federating authorization server
+   Client calls the _federation_uri_ it got from as-1.com using HTTP
+   POST with _federation_body_ as application/x-www-form-urlencoded
+   request body:
+
+   POST /native-authorization HTTP/1.1
+   Host: as-2.com
+   Content-Type: application/x-www-form-urlencoded
+
+   client_id=s6BhdRkqt3&request_uri=
+   urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX
+
+   as-2.com decides to use its native app to interact with end-user and
+   responds:
+
+ HTTP/1.1 400 Bad Request
+ Content-Type: application/json
+
+ {
+     "error": "redirect_to_app",
+     "deep_link": "https://as-2.com/native-authorization?
+       client_id=s6BhdRkqt3&request_uri=
+       urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+ }
+
+   Example client calling receiving an {#authorization-code-response}
+   from the federated authorization server:
+
+   HTTP/1.1 200 OK
+   Content-Type: application/json
+   Cache-Control: no-store
+
+   {
+     "authorization_code": "uY29tL2F1dGhlbnRpY"
+   }
+
+   And providing it to the federating authorization server's
+   response_uri, adding previously obtained auth_session:
+
+   POST /native-authorization HTTP/1.1
+   Host: prev-as.com
+   Content-Type: application/x-www-form-urlencoded
+
+   authorization_code=uY29tL2F1dGhlbnRpY
+   &auth_session=ce6772f5e07bc8361572f
+
+A.3.4.  App calls client
+
+A.3.5.  Client calls federating authorization server
+
+A.3.6.  Client calls its authorization server
 
 A.4.  Passwordless One-Time Password (OTP)
 
