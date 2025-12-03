@@ -2812,14 +2812,16 @@ an authorization request and eventually obtain an authorization code.<a href="#s
              |          | (H)Authorization Code |      Server 1      |
              |          |    For Auth Server 1  |+------------------+|
              |          |----------------------&gt;||    Response      ||
-             |          |&lt;----------------------||       Uri        ||
+             |          |                       ||       Uri        ||
+             |          |&lt;----------------------||    Endpoint      ||
              |          | (I) Authorization     |+------------------+|
              |          |     Code Response     |                    |
              |          |         :             |                    |
              |          |         :             |                    |
              |          | (J) Token Request     |+------------------+|
              |          |----------------------&gt;||      Token       ||
-             |          |&lt;----------------------||     Endpoint     ||
+             |          |                       ||     Endpoint     ||
+             |          |&lt;----------------------||                  ||
              |          | (K) Access Token      |+------------------+|
              |          |                       +--------------------+
              |          |
