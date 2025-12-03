@@ -1357,13 +1357,7 @@ applications, only delegating to the browser in unexpected, high risk, or error 
                     <p id="section-toc.1-1.12.2.3.2.3.1"><a href="#appendix-A.3.3" class="auto internal xref">A.3.3</a>.  <a href="#name-client-calls-federated-auth" class="internal xref">Client calls federated authorization server and is redirected to app</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.3.2.4">
-                    <p id="section-toc.1-1.12.2.3.2.4.1"><a href="#appendix-A.3.4" class="auto internal xref">A.3.4</a>.  <a href="#name-app-calls-client" class="internal xref">App calls client</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.3.2.5">
-                    <p id="section-toc.1-1.12.2.3.2.5.1"><a href="#appendix-A.3.5" class="auto internal xref">A.3.5</a>.  <a href="#name-client-calls-federating-aut" class="internal xref">Client calls federating authorization server</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.3.2.6">
-                    <p id="section-toc.1-1.12.2.3.2.6.1"><a href="#appendix-A.3.6" class="auto internal xref">A.3.6</a>.  <a href="#name-client-calls-its-authorizat" class="internal xref">Client calls its authorization server</a></p>
+                    <p id="section-toc.1-1.12.2.3.2.4.1"><a href="#appendix-A.3.4" class="auto internal xref">A.3.4</a>.  <a href="#name-client-calls-federating-aut" class="internal xref">Client calls federating authorization server</a></p>
 </li>
                 </ul>
 </li>
@@ -2868,7 +2862,7 @@ client_id=s6BhdRkqt3&amp;native_callback_uri=
 https://client.example.com/cb
 </pre><a href="#appendix-A.3.2-5" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.3.2-6">as-1.com receives a request_uri in response, and then responds to client:<a href="#appendix-A.3.2-6" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.2-6">as-1.com receives a request_uri from the PAR endpoint, and then responds to client:<a href="#appendix-A.3.2-6" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.2-7">
 <pre>
 HTTP/1.1 400 Bad Request
@@ -2917,52 +2911,44 @@ Content-Type: application/json
 }
 </pre><a href="#appendix-A.3.3-4" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.3.3-5">Example client calling receiving an {#authorization-code-response} from the federated
-authorization server:<a href="#appendix-A.3.3-5" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.3-5">Client locates app claiming the obtained deep_link and invokes it.
+The invoked app handles the native authorization request and then natively invokes native_callback_uri:<a href="#appendix-A.3.3-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.3-6">
 <pre>
-HTTP/1.1 200 OK
-Content-Type: application/json
-Cache-Control: no-store
-
-{
-  "authorization_code": "uY29tL2F1dGhlbnRpY"
-}
+https://client.example.com/cb?authorization_code=uY29tL2F1dGhlbnRpY
 </pre><a href="#appendix-A.3.3-6" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.3.3-7">And providing it to the federating authorization server's response_uri,
-adding previously obtained auth_session:<a href="#appendix-A.3.3-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.3.3-8">
+</section>
+</div>
+<div id="client-calls-federating-authorization-server">
+<section id="appendix-A.3.4">
+          <h4 id="name-client-calls-federating-aut">
+<a href="#appendix-A.3.4" class="section-number selfRef">A.3.4. </a><a href="#name-client-calls-federating-aut" class="section-name selfRef">Client calls federating authorization server</a>
+          </h4>
+<p id="appendix-A.3.4-1">Client invokes the response_uri of the authorization server which federated
+it to the authorization server which redirected it to the app:<a href="#appendix-A.3.4-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.3.4-2">
 <pre>
 POST /native-authorization HTTP/1.1
-Host: prev-as.com
+Host: as-1.com
 Content-Type: application/x-www-form-urlencoded
 
 authorization_code=uY29tL2F1dGhlbnRpY
 &amp;auth_session=ce6772f5e07bc8361572f
-</pre><a href="#appendix-A.3.3-8" class="pilcrow">¶</a>
+</pre><a href="#appendix-A.3.4-2" class="pilcrow">¶</a>
 </div>
-</section>
+<p id="appendix-A.3.4-3">And receives in response an authorization code:<a href="#appendix-A.3.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.3.4-4">
+<pre>
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "authorization_code": "vZ3:uM3G2eHimcoSqjZ"
+}
+</pre><a href="#appendix-A.3.4-4" class="pilcrow">¶</a>
 </div>
-<div id="app-calls-client">
-<section id="appendix-A.3.4">
-          <h4 id="name-app-calls-client">
-<a href="#appendix-A.3.4" class="section-number selfRef">A.3.4. </a><a href="#name-app-calls-client" class="section-name selfRef">App calls client</a>
-        </h4>
-</section>
-</div>
-<div id="client-calls-federating-authorization-server">
-<section id="appendix-A.3.5">
-          <h4 id="name-client-calls-federating-aut">
-<a href="#appendix-A.3.5" class="section-number selfRef">A.3.5. </a><a href="#name-client-calls-federating-aut" class="section-name selfRef">Client calls federating authorization server</a>
-        </h4>
-</section>
-</div>
-<div id="client-calls-its-authorization-server">
-<section id="appendix-A.3.6">
-          <h4 id="name-client-calls-its-authorizat">
-<a href="#appendix-A.3.6" class="section-number selfRef">A.3.6. </a><a href="#name-client-calls-its-authorizat" class="section-name selfRef">Client calls its authorization server</a>
-        </h4>
+<p id="appendix-A.3.4-5">Client proceeds to exchange code for tokens.<a href="#appendix-A.3.4-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
