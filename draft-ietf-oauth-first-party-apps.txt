@@ -5,10 +5,10 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                                      Okta
 Intended status: Standards Track                             G. Fletcher
-Expires: 25 May 2026                               Capital One Financial
+Expires: 6 June 2026                               Capital One Financial
                                                             P. Kasselman
                                                         Defakto Security
-                                                        21 November 2025
+                                                         3 December 2025
 
 
                  OAuth 2.0 for First-Party Applications
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 May 2026.
+   This Internet-Draft will expire on 6 June 2026.
 
 Copyright Notice
 
@@ -455,13 +455,13 @@ Table of Contents
    "code_challenge_method":  OPTIONAL.  The code challenge method as
       defined by [RFC7636].  See Section 5.2.2.4 for details.
 
-   "native_callback_uri":  OPTIONAL.  Native client app's redirect_uri,
-      claimed as deep link. _native_callback_uri_ MAY be invoked by
-      authorization server's user-interacting app to natively switch to
-      client app to provide its response.  If native_callback_uri is
-      included in a native authorization request, authorization server
-      MUST include the native_callback_uri when federating to another
-      authorization server.
+   "native_callback_uri":  OPTIONAL.  Native client app's
+      *redirect_uri*, claimed as deep link. _native_callback_uri_ SHALL
+      be natively invoked by authorization server's user-interacting app
+      to provide its response to the client app.  If native_callback_uri
+      is included in a native authorization request, authorization
+      server MUST include the native_callback_uri when federating to
+      another authorization server.
 
    Specific implementations as well as extensions to this specification
    MAY define additional parameters to be used at this endpoint.
@@ -566,10 +566,10 @@ Table of Contents
          the user interacts with the authorization server in a web
          browser.  See Section 5.2.2.4 for details.
 
-      "native_authorization_unsupported":  The authorization server does
-         not support the native authorization endpoint, or does, but a
-         downstream authorization server it attempted to federate to,
-         does not support the native authorization endpoint.
+      "native_authorization_federate_unsupported":  The authorization
+         server intended to federate to a downstream authorization
+         server, but it does not support the native authorization
+         endpoint.
 
       Values for the error parameter MUST NOT include characters outside
       the set %x20-21 / %x23-5B / %x5D-7E.
@@ -644,6 +644,10 @@ Table of Contents
    return the _federation_uri_, _federation_body_, _response_uri_ and
    _auth_session_ response attributes.
 
+   When federating to another authorization server, federating
+   authorization server MUST use PAR [RFC9126] and include request_uri
+   in federation_body.
+
    Example *federating* response:
 
  HTTP/1.1 400 Bad Request
@@ -671,7 +675,10 @@ Table of Contents
 
    The federated authorization server should consider end-user's privacy
    and security to determine if it SHOULD request authorization
-   challenges when being federated to.
+   challenges when being federated to.  For example it can identify
+   *federating* clients and avoid serving them authorization challenges,
+   as user-serving clients receiving those challenges are not its first
+   party clients.
 
    The client MUST provide any response obtained from the *federated*
    authorization server, as application/x-www-form-urlencoded request
@@ -679,7 +686,7 @@ Table of Contents
    authorization server which SHALL be invoked using HTTP POST.
 
    Except when *federated* authorization server has returned the
-   following error codes: _insufficient_authorization_,
+   following error codes: _federate_, _insufficient_authorization_,
    _insufficient_information_, _redirect_to_app_, _redirect_to_web_, in
    which case the client MUST handle these errors according to this
    specification.
@@ -1368,9 +1375,9 @@ Table of Contents
    [I-D.ietf-oauth-cross-device-security]
               Kasselman, P., Fett, D., and F. Skokan, "Cross-Device
               Flows: Security Best Current Practice", Work in Progress,
-              Internet-Draft, draft-ietf-oauth-cross-device-security-12,
-              5 September 2025, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-oauth-cross-device-security-12>.
+              Internet-Draft, draft-ietf-oauth-cross-device-security-13,
+              2 December 2025, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-oauth-cross-device-security-13>.
 
    [IANA.JWT] "*** BROKEN REFERENCE ***".
 
