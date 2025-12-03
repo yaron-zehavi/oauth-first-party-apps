@@ -325,8 +325,8 @@ Table of Contents
       information, submitting it to the Native Authorization Endpoint
       and then receiving an error or authorization code may repeat
       several times.  The authorization server MAY decide to federate to
-      another downstream authorization server, providing a request uri
-      to its Native Authorization Endpoint.
+      another downstream authorization server's Native Authorization
+      Endpoint.
 
    *  (D) The client gathers additional information (e.g. signed passkey
       challenge, or one-time code from email) and makes a POST request
@@ -372,6 +372,15 @@ Table of Contents
    If the authorization server requires client authentication for this
    client on the Token Endpoint, then the authorization server MUST also
    require client authentication for this client on the Native
+   Authorization Endpoint, or require the client to use PAR [RFC9126],
+   with appropriate client authentication on the pushed authorization
+   request endpoint.  When using PAR with client authentication,
+   providing the request_uri to the Native Authorization Endpoint
+   attests that client authentication took place.  When federating to
+   downstream authorization servers, the usage of PAR [RFC9126] with
+   client authentication is REQUIRED, as the native client calling the
+   Native Authorization Endpoint of a federated authorization server is
+   not an OAuth client and therefore cannot authenticate to the Native
    Authorization Endpoint.  See Section 9.4 for more details.
 
    Authorization servers supporting this specification SHOULD include
