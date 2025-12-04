@@ -1918,8 +1918,9 @@ is JSON and conforms to <code>application/&lt;AS-defined&gt;+json</code>.<a href
 <p id="section-5.2.2.1-1">If the authorization server decides to federate to another authorization server, it
 responds with error code <em>federate</em> and <span class="bcp14">MUST</span> return the <em>federation_uri</em>,
 <em>federation_body</em>, <em>response_uri</em> and <em>auth_session</em> response attributes.<a href="#section-5.2.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.1-2">When federating to another authorization server, federating authorization server <span class="bcp14">MUST</span>
-use PAR <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> and include request_uri in federation_body.<a href="#section-5.2.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-2">When federating to another authorization server:
+* Federating authorization server <span class="bcp14">MUST</span> use PAR <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> and include <em>request_uri</em> in federation_body.
+* If <em>native_callback_uri</em> was included in the native authorization request, it <span class="bcp14">MUST</span> be included when calling federated authorization server's Native Authorization Endpoint.<a href="#section-5.2.2.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.2.2.1-3">Example <strong>federating</strong> response:<a href="#section-5.2.2.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2.2.1-4">
 <pre>
@@ -1949,17 +1950,17 @@ urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX
 </pre><a href="#section-5.2.2.1-6" class="pilcrow">¶</a>
 </div>
 <p id="section-5.2.2.1-7">The federated authorization server should consider end-user's privacy and security
-to determine if it <span class="bcp14">SHOULD</span> request authorization challenges when being federated to.
-For example it can identify <strong>federating</strong> clients and avoid serving them authorization
-challenges, as user-serving clients receiving those challenges are not its first
-party clients.<a href="#section-5.2.2.1-7" class="pilcrow">¶</a></p>
+to determine if it should present authorization challenges in federation scenarios.
+For example, it can label <strong>federating</strong> clients as such and avoid serving them
+authorization challenges, as user-serving clients receiving those challenges are
+not first party clients.<a href="#section-5.2.2.1-7" class="pilcrow">¶</a></p>
 <p id="section-5.2.2.1-8">The client <span class="bcp14">MUST</span> provide any response obtained from the <strong>federated</strong> authorization server,
 as application/x-www-form-urlencoded request body for the <em>response_uri</em> of the respective
 <strong>federating</strong> authorization server which <span class="bcp14">SHALL</span> be invoked using HTTP POST.<a href="#section-5.2.2.1-8" class="pilcrow">¶</a></p>
 <p id="section-5.2.2.1-9">However, when <strong>federated</strong> authorization server returns the following error codes:
 <em>federate</em>, <em>insufficient_authorization</em>, <em>insufficient_information</em>, <em>redirect_to_app</em>,
 <em>redirect_to_web</em>, client <span class="bcp14">MUST</span> handle these errors according to this specification.<a href="#section-5.2.2.1-9" class="pilcrow">¶</a></p>
-<p id="section-5.2.2.1-10">Example client calling receiving an <a href="#authorization-code-response" class="auto internal xref">Section 5.2.1</a> from the federated
+<p id="section-5.2.2.1-10">Example client calling receiving an authorization code response <a href="#authorization-code-response" class="auto internal xref">Section 5.2.1</a> from the federated
 authorization server:<a href="#section-5.2.2.1-10" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2.2.1-11">
 <pre>
@@ -2041,19 +2042,22 @@ However we assume closed ecosystems could employ an allowList, and open ecosyste
                 <p id="section-5.2.2.2-8.3.1">Inspect client's metadata for redirect_uri's and validate <strong>native_callback_uri</strong> is included among them.<a href="#section-5.2.2.2-8.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-5.2.2.2-9">When the client is natively invoked on its native_callback_uri, it shall handle the response parameters as it
-would handle a response from a federated authorization server. See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2.2-9" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.2-9">When the client is invoked on its native_callback_uri, it shall regard the invocation as a response from
+the authorization server which redirected the client to the app.
+In other words, the authorization server which redirected the client to the app is not the
+audience of the app's response. See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for details.<a href="#section-5.2.2.2-9" class="pilcrow">¶</a></p>
 <p id="section-5.2.2.2-10">Example URI used to invoke of client app on its claimed native_callback_uri:<a href="#section-5.2.2.2-10" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2.2.2-11">
 <pre>
 https://client.example.com/cb?authorization_code=uY29tL2F1dGhlbnRpY
 </pre><a href="#section-5.2.2.2-11" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2.2-12">Example client invoking the response_uri of the authorization server which redirected it to the app:<a href="#section-5.2.2.2-12" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.2-12">Example client invoking the response_uri <strong>of the authorization server which federated it</strong>
+to the authorization server, which redirected it to the app:<a href="#section-5.2.2.2-12" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2.2.2-13">
 <pre>
 POST /native-authorization HTTP/1.1
-Host: prev-as.com
+Host: **prev-as.com**
 Content-Type: application/x-www-form-urlencoded
 
 authorization_code=uY29tL2F1dGhlbnRpY

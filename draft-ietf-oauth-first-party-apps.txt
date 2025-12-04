@@ -660,9 +660,11 @@ Table of Contents
    return the _federation_uri_, _federation_body_, _response_uri_ and
    _auth_session_ response attributes.
 
-   When federating to another authorization server, federating
-   authorization server MUST use PAR [RFC9126] and include request_uri
-   in federation_body.
+   When federating to another authorization server: * Federating
+   authorization server MUST use PAR [RFC9126] and include _request_uri_
+   in federation_body. * If _native_callback_uri_ was included in the
+   native authorization request, it MUST be included when calling
+   federated authorization server's Native Authorization Endpoint.
 
    Example *federating* response:
 
@@ -690,11 +692,11 @@ Table of Contents
    urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX
 
    The federated authorization server should consider end-user's privacy
-   and security to determine if it SHOULD request authorization
-   challenges when being federated to.  For example it can identify
-   *federating* clients and avoid serving them authorization challenges,
-   as user-serving clients receiving those challenges are not its first
-   party clients.
+   and security to determine if it should present authorization
+   challenges in federation scenarios.  For example, it can label
+   *federating* clients as such and avoid serving them authorization
+   challenges, as user-serving clients receiving those challenges are
+   not first party clients.
 
    The client MUST provide any response obtained from the *federated*
    authorization server, as application/x-www-form-urlencoded request
@@ -706,8 +708,8 @@ Table of Contents
    _insufficient_information_, _redirect_to_app_, _redirect_to_web_,
    client MUST handle these errors according to this specification.
 
-   Example client calling receiving an Section 5.2.1 from the federated
-   authorization server:
+   Example client calling receiving an authorization code response
+   Section 5.2.1 from the federated authorization server:
 
    HTTP/1.1 200 OK
    Server: next-as.com
@@ -778,21 +780,23 @@ Table of Contents
    *  Inspect client's metadata for redirect_uri's and validate
       *native_callback_uri* is included among them.
 
-   When the client is natively invoked on its native_callback_uri, it
-   shall handle the response parameters as it would handle a response
-   from a federated authorization server.  See Section 5.2.2.1 for
-   details.
+   When the client is invoked on its native_callback_uri, it shall
+   regard the invocation as a response from the authorization server
+   which redirected the client to the app.  In other words, the
+   authorization server which redirected the client to the app is not
+   the audience of the app's response.  See Section 5.2.2.1 for details.
 
    Example URI used to invoke of client app on its claimed
    native_callback_uri:
 
    https://client.example.com/cb?authorization_code=uY29tL2F1dGhlbnRpY
 
-   Example client invoking the response_uri of the authorization server
-   which redirected it to the app:
+   Example client invoking the response_uri *of the authorization server
+   which federated it* to the authorization server, which redirected it
+   to the app:
 
    POST /native-authorization HTTP/1.1
-   Host: prev-as.com
+   Host: **prev-as.com**
    Content-Type: application/x-www-form-urlencoded
 
    authorization_code=uY29tL2F1dGhlbnRpY
