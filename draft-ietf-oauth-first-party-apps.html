@@ -2893,6 +2893,7 @@ Content-Type: application/json
 }
 </pre><a href="#appendix-A.3.2-8" class="pilcrow">¶</a>
 </div>
+<p id="appendix-A.3.2-9">See <a href="#federating-response" class="auto internal xref">Section 5.2.2.1</a> for more details.<a href="#appendix-A.3.2-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="client-calls-federated-authorization-server-and-is-redirected-to-app">
@@ -2926,7 +2927,8 @@ Content-Type: application/json
 }
 </pre><a href="#appendix-A.3.3-4" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.3.3-5">Client locates app claiming the obtained deep_link and invokes it.
+<p id="appendix-A.3.3-5">Client locates an app claiming the obtained deep_link and invokes it.
+See <a href="#redirect-to-app-response" class="auto internal xref">Section 5.2.2.2</a> for more details.
 The invoked app handles the native authorization request and then natively invokes native_callback_uri:<a href="#appendix-A.3.3-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.3-6">
 <pre>
@@ -2940,8 +2942,8 @@ https://client.example.com/cb?authorization_code=uY29tL2F1dGhlbnRpY
           <h4 id="name-client-calls-federating-aut">
 <a href="#appendix-A.3.4" class="section-number selfRef">A.3.4. </a><a href="#name-client-calls-federating-aut" class="section-name selfRef">Client calls federating authorization server</a>
           </h4>
-<p id="appendix-A.3.4-1">Client invokes the response_uri of the authorization server which federated
-it to the authorization server which redirected it to the app:<a href="#appendix-A.3.4-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.4-1">Client invokes the response_uri of as-1.com as it is the authorization server which federated
+it to as-2.com and the app's response is regarded as the response of as-2.com:<a href="#appendix-A.3.4-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.4-2">
 <pre>
 POST /native-authorization HTTP/1.1
@@ -2952,7 +2954,7 @@ authorization_code=uY29tL2F1dGhlbnRpY
 &amp;auth_session=ce6772f5e07bc8361572f
 </pre><a href="#appendix-A.3.4-2" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.3.4-3">And receives in response an authorization code:<a href="#appendix-A.3.4-3" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.4-3">And receives in response an authorization code, which it is the audience of (no further federations) to resolve:<a href="#appendix-A.3.4-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.4-4">
 <pre>
 HTTP/1.1 200 OK
