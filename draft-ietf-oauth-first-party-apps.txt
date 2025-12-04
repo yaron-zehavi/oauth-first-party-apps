@@ -5,10 +5,10 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                                      Okta
 Intended status: Standards Track                             G. Fletcher
-Expires: 6 June 2026                               Capital One Financial
+Expires: 7 June 2026                               Capital One Financial
                                                             P. Kasselman
                                                         Defakto Security
-                                                         3 December 2025
+                                                         4 December 2025
 
 
                  OAuth 2.0 for First-Party Applications
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 June 2026.
+   This Internet-Draft will expire on 7 June 2026.
 
 Copyright Notice
 
@@ -381,14 +381,14 @@ Table of Contents
    require client authentication for this client on the Native
    Authorization Endpoint, or require the client to use PAR [RFC9126],
    with appropriate client authentication on the pushed authorization
-   request endpoint.  When using PAR with client authentication,
-   providing the request_uri to the Native Authorization Endpoint
-   attests that client authentication took place.  When federating to
-   downstream authorization servers, the usage of PAR [RFC9126] with
-   client authentication is REQUIRED, as the native client calling the
-   Native Authorization Endpoint of a federated authorization server is
-   not _its_ OAuth client and therefore cannot authenticate to the
-   Native Authorization Endpoint.  See Section 9.4 for more details.
+   request endpoint.  When using PAR with client authentication, the
+   request_uri provided to the Native Authorization Endpoint attests
+   that client authentication took place.  When federating to downstream
+   authorization servers, the usage of PAR [RFC9126] with client
+   authentication is REQUIRED, as the native client calling the Native
+   Authorization Endpoint of a federated authorization server is not
+   _its_ OAuth client and therefore has no other means of
+   authenticating.  See Section 9.4 for more details.
 
    Authorization servers supporting this specification SHOULD include
    the URL of their native authorization endpoint in their authorization
@@ -409,10 +409,10 @@ Table of Contents
    The native authorization endpoint also accepts the
    _native_callback_uri_ parameter.
 
-   When authorization servers intend to federate to a downstream
-   authorization server, they MUST ensure it offers a
+   Before authorization servers instruct a client to federate to a
+   downstream authorization server, they MUST ensure it offers a
    _native_authorization_endpoint_, otherwise return the error
-   _native_authorization_federate_unsupported_.
+   native_authorization_federate_unsupported*.
 
    The client initiates the authorization flow with or without
    information collected from the user (e.g. a signed passkey challenge
@@ -701,14 +701,13 @@ Table of Contents
    body for the _response_uri_ of the respective *federating*
    authorization server which SHALL be invoked using HTTP POST.
 
-   Except when *federated* authorization server has returned the
-   following error codes: _federate_, _insufficient_authorization_,
-   _insufficient_information_, _redirect_to_app_, _redirect_to_web_, in
-   which case the client MUST handle these errors according to this
-   specification.
+   However, when *federated* authorization server returns the following
+   error codes: _federate_, _insufficient_authorization_,
+   _insufficient_information_, _redirect_to_app_, _redirect_to_web_,
+   client MUST handle these errors according to this specification.
 
-   Example client calling receiving an {#authorization-code-response}
-   from the federated authorization server:
+   Example client calling receiving an Section 5.2.1 from the federated
+   authorization server:
 
    HTTP/1.1 200 OK
    Server: next-as.com
@@ -1503,9 +1502,9 @@ Table of Contents
    [I-D.ietf-oauth-browser-based-apps]
               Parecki, A., De Ryck, P., and D. Waite, "OAuth 2.0 for
               Browser-Based Applications", Work in Progress, Internet-
-              Draft, draft-ietf-oauth-browser-based-apps-25, 3 July
+              Draft, draft-ietf-oauth-browser-based-apps-26, 3 December
               2025, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              oauth-browser-based-apps-25>.
+              oauth-browser-based-apps-26>.
 
    [RFC6750]  Jones, M. and D. Hardt, "The OAuth 2.0 Authorization
               Framework: Bearer Token Usage", RFC 6750,
