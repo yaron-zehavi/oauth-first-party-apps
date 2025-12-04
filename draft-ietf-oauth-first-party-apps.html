@@ -1345,7 +1345,7 @@ applications, only delegating to the browser in unexpected, high risk, or error 
                 <p id="section-toc.1-1.12.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-redirect-to-authorization-s" class="internal xref">Redirect to Authorization Server</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.3">
-                <p id="section-toc.1-1.12.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-native-client-federated-the" class="internal xref">Native client federated, then redirected to app</a></p>
+                <p id="section-toc.1-1.12.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-native-client-federated-and" class="internal xref">Native client federated and redirected to app</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.3.2.1">
                     <p id="section-toc.1-1.12.2.3.2.1.1"><a href="#appendix-A.3.1" class="auto internal xref">A.3.1</a>.  <a href="#name-diagram" class="internal xref">Diagram</a></p>
@@ -1933,7 +1933,7 @@ Content-Type: application/json
     "response_uri": "https://prev-as.com/native-authorization",
     "federation_uri": "https://next-as.com/native-authorization",
     "federation_body": "client_id=s6BhdRkqt3&amp;request_uri=
-      urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+      urn:ietf:params:oauth:request_uri:R3p_hzwsR7outNQSKfoX"
 }
 </pre><a href="#section-5.2.2.1-4" class="pilcrow">¶</a>
 </div>
@@ -1946,7 +1946,7 @@ Host: next-as.com
 Content-Type: application/x-www-form-urlencoded
 
 client_id=s6BhdRkqt3&amp;request_uri=
-urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX
+urn:ietf:params:oauth:request_uri:R3p_hzwsR7outNQSKfoX
 </pre><a href="#section-5.2.2.1-6" class="pilcrow">¶</a>
 </div>
 <p id="section-5.2.2.1-7">The federated authorization server should consider end-user's privacy and security
@@ -2006,7 +2006,7 @@ Content-Type: application/json
     "error": "redirect_to_app",
     "deep_link": "https://next-as.com/native-authorization?
       client_id=s6BhdRkqt3&amp;request_uri=
-      urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+      urn:ietf:params:oauth:request_uri:R3p_hzwsR7outNQSKfoX"
 }
 </pre><a href="#section-5.2.2.2-3" class="pilcrow">¶</a>
 </div>
@@ -2772,10 +2772,10 @@ an authorization request and eventually obtain an authorization code.<a href="#s
         </ol>
 </section>
 </div>
-<div id="native-client-federated-then-redirected-to-app">
+<div id="native-client-federated-and-redirected-to-app">
 <section id="appendix-A.3">
-        <h3 id="name-native-client-federated-the">
-<a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-native-client-federated-the" class="section-name selfRef">Native client federated, then redirected to app</a>
+        <h3 id="name-native-client-federated-and">
+<a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-native-client-federated-and" class="section-name selfRef">Native client federated and redirected to app</a>
         </h3>
 <div id="diagram">
 <section id="appendix-A.3.1">
@@ -2810,7 +2810,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
              |          |                       |   Auth Server 2    |
              |          |&lt;----------------------|                    |
              |          | (G)Authorization code +--------------------+
-             |          |    For Auth Server 1
+             |          |   For Auth Server 1
              |          |         :             +--------------------+
              |          |         :             |   Authorization    |
              |          | (H)Authorization Code |      Server 1      |
@@ -2832,7 +2832,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
              +----------+
 </pre><a href="#appendix-A.3.1-1" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.3.1-2">Figure: Client is federated, then redirected to app<a href="#appendix-A.3.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.1-2">Figure: Native client federated, then redirected to app<a href="#appendix-A.3.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="client-makes-initial-request-and-receives-federate-error">
@@ -2840,7 +2840,7 @@ an authorization request and eventually obtain an authorization code.<a href="#s
           <h4 id="name-client-makes-initial-reques">
 <a href="#appendix-A.3.2" class="section-number selfRef">A.3.2. </a><a href="#name-client-makes-initial-reques" class="section-name selfRef">Client makes initial request and receives "federate" error</a>
           </h4>
-<p id="appendix-A.3.2-1">Client calls the native authorization endpoint:<a href="#appendix-A.3.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.2-1">Client calls the native authorization endpoint and includes the <em>native_callback_uri</em> parameter:<a href="#appendix-A.3.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.2-2">
 <pre>
 POST /native-authorization HTTP/1.1
@@ -2853,10 +2853,20 @@ https://client.example.com/cb
 </div>
 <p id="appendix-A.3.2-3">The first authorization server, as-1.com, decides to federate to as-2.com after validating
 it supports the native authorization endpoint. If it does not, as-1.com returns:<a href="#appendix-A.3.2-3" class="pilcrow">¶</a></p>
-<p id="appendix-A.3.2-4">Since native authorization endpoint is supported by the federated authorization server,
+<div class="alignLeft art-text artwork" id="appendix-A.3.2-4">
+<pre>
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+    "error": "native_authorization_federate_unsupported"
+}
+</pre><a href="#appendix-A.3.2-4" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A.3.2-5">If native authorization endpoint is supported by the federated authorization server,
 as-1.com performs a PAR <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> request to as-2.com's pushed authorization endpoint,
-including the original native_callback_uri:<a href="#appendix-A.3.2-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.3.2-5">
+including the original <em>native_callback_uri</em>:<a href="#appendix-A.3.2-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.3.2-6">
 <pre>
 POST /par HTTP/1.1
 Host: as-2.com
@@ -2864,10 +2874,11 @@ Content-Type: application/x-www-form-urlencoded
 
 client_id=s6BhdRkqt3&amp;native_callback_uri=
 https://client.example.com/cb
-</pre><a href="#appendix-A.3.2-5" class="pilcrow">¶</a>
+</pre><a href="#appendix-A.3.2-6" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.3.2-6">as-1.com receives a request_uri from the PAR endpoint, and then responds to client:<a href="#appendix-A.3.2-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.3.2-7">
+<p id="appendix-A.3.2-7">as-1.com receives a request_uri from the PAR endpoint, which it
+includes in its response to client, in the <em>federation_body</em> attribute:<a href="#appendix-A.3.2-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.3.2-8">
 <pre>
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -2878,9 +2889,9 @@ Content-Type: application/json
     "response_uri": "https://as-1.com/native-authorization",
     "federation_uri": "https://as-2.com/native-authorization",
     "federation_body": "client_id=s6BhdRkqt3&amp;request_uri=
-      urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+      urn:ietf:params:oauth:request_uri:R3p_hzwsR7outNQSKfoX"
 }
-</pre><a href="#appendix-A.3.2-7" class="pilcrow">¶</a>
+</pre><a href="#appendix-A.3.2-8" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2898,7 +2909,7 @@ Host: as-2.com
 Content-Type: application/x-www-form-urlencoded
 
 client_id=s6BhdRkqt3&amp;request_uri=
-urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX
+urn:ietf:params:oauth:request_uri:R3p_hzwsR7outNQSKfoX
 </pre><a href="#appendix-A.3.3-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.3.3-3">as-2.com decides to use its native app to interact with end-user and responds:<a href="#appendix-A.3.3-3" class="pilcrow">¶</a></p>
@@ -2911,7 +2922,7 @@ Content-Type: application/json
     "error": "redirect_to_app",
     "deep_link": "https://as-2.com/native-authorization?
       client_id=s6BhdRkqt3&amp;request_uri=
-      urn%3Aietf%3Aparams%3Aoauth%3Arequest_uri%3AR3p_hzwsR7outNQSKfoX"
+      urn:ietf:params:oauth:request_uri:R3p_hzwsR7outNQSKfoX"
 }
 </pre><a href="#appendix-A.3.3-4" class="pilcrow">¶</a>
 </div>
