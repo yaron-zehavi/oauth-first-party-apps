@@ -2158,8 +2158,9 @@ B.3.  Example Sequence
 
 B.4.  Usage with Digital Credentials
 
-   Digital credentials can be used to authenticate a user.  This example
-   flow shows how and the DC API can be incorporated into this spec.
+   Digital credentials (stored in wallets) can be used to authenticate a
+   user.  This example flow shows how they can be incorporated into this
+   spec using DC API/OpenId4VP.
 
 User            First Party Client        IdP              Wallet/DC API       Verifier
 ----            ------------------        ---              --------------       --------
