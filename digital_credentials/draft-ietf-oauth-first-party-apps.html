@@ -3350,7 +3350,7 @@ Cache-Control: no-store
         <h3 id="name-usage-with-digital-credenti">
 <a href="#appendix-B.4" class="section-number selfRef">B.4. </a><a href="#name-usage-with-digital-credenti" class="section-name selfRef">Usage with Digital Credentials</a>
         </h3>
-<p id="appendix-B.4-1">Digital credentials (stored in wallets) can be used to authenticate a user. This example flow shows how they can be incorporated into this spec using DC API/<span>[<a href="#OpenID4VP" class="cite xref">OpenID4VP</a>]</span>.<a href="#appendix-B.4-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.4-1">Digital credentials (stored in wallets) may be used by authorization servers to authenticate a user or approve a transaction. This example flow shows how wallet credential presentation can be incorporated into this spec using DC API/<span>[<a href="#OpenID4VP" class="cite xref">OpenID4VP</a>]</span>.<a href="#appendix-B.4-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-ascii-art art-text artwork" id="appendix-B.4-2">
 <pre>
 User            First Party Client        AS               Wallet/DC API        Verifier
@@ -3462,13 +3462,13 @@ Content-Type: application/x-www-form-urlencoded
 </li>
             </ul>
 <p id="appendix-B.4-4.2.3">
-Note that the client must know these indicators upfront or collect this information from the user before making the initial request.<a href="#appendix-B.4-4.2.3" class="pilcrow">¶</a></p>
+Note that the client may collect this information from the user before making the initial request, or provide what it knows initially and respond gradually to additional requests for information from the authorization server.<a href="#appendix-B.4-4.2.3" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.3">
-            <p id="appendix-B.4-4.3.1">AS returns with error response (insufficient_authorization), indicating in the response body that digital credentials are required. The AS's response may look like this:<a href="#appendix-B.4-4.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.3.1">AS returns with error response (insufficient_authorization), indicating in the response body that digital credential presentation is required. The authorization server's response may look like this:<a href="#appendix-B.4-4.3.1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B.4-4.3.2">
 <pre>
-HTTP/1.1 403 Forbidden
+HTTP/1.1 400 Bad Request
 Content-Type: application/json
 Cache-Control: no-store
 
@@ -3476,7 +3476,7 @@ Cache-Control: no-store
   "error": "insufficient_authorization",
   "auth_session": "ce6772f5e07bc8361572f",
   "type": "digital_credentials_required",
-  "request": "openid4vp://?request_uri=..." // omitted if the AS cannot yet return the presentation request
+  "request": "openid4vp://?request_uri=..." // omitted if the authorization server cannot yet return the presentation request
 }
 </pre><a href="#appendix-B.4-4.3.2" class="pilcrow">¶</a>
 </div>
@@ -3488,7 +3488,7 @@ Cache-Control: no-store
             <p id="appendix-B.4-4.5.1">The DC API returns the vp_token to the client<a href="#appendix-B.4-4.5.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.6">
-            <p id="appendix-B.4-4.6.1">Client sends vp_token to the AS<a href="#appendix-B.4-4.6.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.6.1">Client sends vp_token to the authorization server<a href="#appendix-B.4-4.6.1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B.4-4.6.2">
 <pre>
  POST /native-authorization HTTP/1.1
@@ -3503,10 +3503,10 @@ Cache-Control: no-store
 </div>
 </li>
           <li id="appendix-B.4-4.7">
-            <p id="appendix-B.4-4.7.1">The AS asks the verifier to verify the vp_token<a href="#appendix-B.4-4.7.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.7.1">The authorization server asks the verifier to verify the vp_token<a href="#appendix-B.4-4.7.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.8">
-            <p id="appendix-B.4-4.8.1">The verifier verifies the vp_token and returns the result to the AS. The AS evaluates the verification result and returns either a code or an error as per <a href="#native-response" class="auto internal xref">Section 5.2</a>. Here we assume the happy path. Continue with step 24.<a href="#appendix-B.4-4.8.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.8.1">The verifier verifies the vp_token and returns the result. The authorization server evaluates the verification result and returns either a code or an error as per <a href="#native-response" class="auto internal xref">Section 5.2</a>. Here we assume the happy path. Continue with step 24.<a href="#appendix-B.4-4.8.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.9">
             <p id="appendix-B.4-4.9.1">If DC API is NOT supported and in case of same device flow, the client invokes the Wallet through Deep Link.<a href="#appendix-B.4-4.9.1" class="pilcrow">¶</a></p>
@@ -3515,13 +3515,13 @@ Cache-Control: no-store
             <p id="appendix-B.4-4.10.1">Wallet presents credentials to verifier.<a href="#appendix-B.4-4.10.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.11">
-            <p id="appendix-B.4-4.11.1">Verifier responds with a URL that tells the wallet to redirect as per <span>[<a href="#OpenID4VP" class="cite xref">OpenID4VP</a>]</span>.<a href="#appendix-B.4-4.11.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.11.1">Verifier responds with a URL instructing wallet to redirect as per <span>[<a href="#OpenID4VP" class="cite xref">OpenID4VP</a>]</span>.<a href="#appendix-B.4-4.11.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.12">
-            <p id="appendix-B.4-4.12.1">Wallet redirects back to the client by treating the received URL as a Deep Link.<a href="#appendix-B.4-4.12.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.12.1">Wallet redirects back to the client using the received URL as a Deep Link.<a href="#appendix-B.4-4.12.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.13">
-            <p id="appendix-B.4-4.13.1">Client extracts the handle from the received URL and hands it off to the AS.<a href="#appendix-B.4-4.13.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.13.1">Client extracts the handle from the received URL and provides it to the authorization server.<a href="#appendix-B.4-4.13.1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B.4-4.13.2">
 <pre>
 POST /native-authorization HTTP/1.1
@@ -3536,10 +3536,10 @@ Content-Type: application/json
 </div>
 </li>
           <li id="appendix-B.4-4.14">
-            <p id="appendix-B.4-4.14.1">The AS uses the handle to look up the presentation and retrieve the result.<a href="#appendix-B.4-4.14.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.14.1">The authorization server uses the handle at verifier to look retrieve the presentation result.<a href="#appendix-B.4-4.14.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.15">
-            <p id="appendix-B.4-4.15.1">The verifier responds with the presentation result which the AS evaluates. The AS then returns either a code or an error as per <a href="#native-response" class="auto internal xref">Section 5.2</a>. Here we assume the happy path. Continue with step 24.<a href="#appendix-B.4-4.15.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.15.1">The verifier responds with the presentation result which the authorization server evaluates, then returns either a code or an error as per <a href="#native-response" class="auto internal xref">Section 5.2</a>. Here we assume the happy path. Continue with step 24.<a href="#appendix-B.4-4.15.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.16">
             <p id="appendix-B.4-4.16.1">If DC API is NOT supported and in case of cross device, the client renders the presentation request as QR code and displays it to the user.<a href="#appendix-B.4-4.16.1" class="pilcrow">¶</a></p>
@@ -3551,7 +3551,7 @@ Content-Type: application/json
             <p id="appendix-B.4-4.18.1">The wallet presents the credentials to the verifier.<a href="#appendix-B.4-4.18.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.19">
-            <p id="appendix-B.4-4.19.1">While displaying the QR code, the client polls the AS for the presentation status until it receives a non-pending result.<a href="#appendix-B.4-4.19.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.19.1">Meanwhile, client polls the authorization server for the presentation status until it receives a non-pending result.<a href="#appendix-B.4-4.19.1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B.4-4.19.2">
 <pre>
 POST /native-authorization HTTP/1.1
@@ -3565,37 +3565,38 @@ Content-Type: application/json
 </div>
 </li>
           <li id="appendix-B.4-4.20">
-            <p id="appendix-B.4-4.20.1">The AS in turn retreives the presentation status from the verifier.<a href="#appendix-B.4-4.20.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.20.1">The authorization server in turn retreives the presentation status from the verifier.<a href="#appendix-B.4-4.20.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.21">
-            <p id="appendix-B.4-4.21.1">The verifier responds to the AS that the presentation result is not yet ready.<a href="#appendix-B.4-4.21.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.21.1">The verifier responds to the authorization server that the presentation result is not yet ready.<a href="#appendix-B.4-4.21.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.22">
-            <p id="appendix-B.4-4.22.1">The AS responds to the client that the presentation result is not yet ready.<a href="#appendix-B.4-4.22.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.22.1">The authorization server responds to the client that the presentation result is not yet ready.<a href="#appendix-B.4-4.22.1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B.4-4.22.2">
 <pre>
-HTTP/1.1 200 OK
+HTTP/1.1 400 Bad Request
 Content-Type: application/json
 Cache-Control: no-store
 
 {
-  "auth_session": "ce6772f5e07bc8361572f",
-  "status": "pending"
+  "error": "insufficient_authorization",
+  "status": "pending",
+  "auth_session": "ce6772f5e07bc8361572f"
 }
 </pre><a href="#appendix-B.4-4.22.2" class="pilcrow">¶</a>
 </div>
 </li>
           <li id="appendix-B.4-4.23">
-            <p id="appendix-B.4-4.23.1">Once the presentation is done, the verifier returns the result to the AS. The AS then evaluates the verification result and returns either a code or an error as per <a href="#native-response" class="auto internal xref">Section 5.2</a>, breaking the loop. Here we assume the happy path. Continue with step 24.<a href="#appendix-B.4-4.23.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.23.1">Once the presentation is done, the verifier returns the result to the authorization server, which then evaluates the verification result and returns either a code or an error as per <a href="#native-response" class="auto internal xref">Section 5.2</a>, breaking the loop. Here we assume the happy path. Continue with step 24.<a href="#appendix-B.4-4.23.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.24">
-            <p id="appendix-B.4-4.24.1">The AS returns an authorization code to the client as per <a href="#native-response" class="auto internal xref">Section 5.2</a>.<a href="#appendix-B.4-4.24.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.24.1">The authorization server returns an authorization code to the client as per <a href="#native-response" class="auto internal xref">Section 5.2</a>.<a href="#appendix-B.4-4.24.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.25">
             <p id="appendix-B.4-4.25.1">The client redeems the code for an access token as per <a href="#token-request" class="auto internal xref">Section 6</a>.<a href="#appendix-B.4-4.25.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.26">
-            <p id="appendix-B.4-4.26.1">The AS responds to the token request as per <a href="#token-request" class="auto internal xref">Section 6</a>.<a href="#appendix-B.4-4.26.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.26.1">The authorization server responds to the token request as per <a href="#token-request" class="auto internal xref">Section 6</a>.<a href="#appendix-B.4-4.26.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <div id="rar-transaction-data">
@@ -3603,7 +3604,7 @@ Cache-Control: no-store
           <h4 id="name-rar-transaction-data">
 <a href="#appendix-B.4.1" class="section-number selfRef">B.4.1. </a><a href="#name-rar-transaction-data" class="section-name selfRef">RAR &amp; Transaction Data</a>
           </h4>
-<p id="appendix-B.4.1-1"><span>[<a href="#OpenID4VP" class="cite xref">OpenID4VP</a>]</span> supports transaction data, which is additional data that is signed and presented together with the requested credentials. This can be mapped to OAuth's RAR. The following diagram depicts a wallet flow incorporating RAR. Details of how the wallet is invoked or how the presentation result reaches the AS are omitted for simplicity. Refer to <a href="#digital-credentials" class="auto internal xref">Appendix B.4</a> for details.<a href="#appendix-B.4.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.4.1-1"><span>[<a href="#OpenID4VP" class="cite xref">OpenID4VP</a>]</span> supports transaction data, which is additional data to be signed and presented alongside the requested credentials. This can be mapped to RAR <span>[<a href="#RFC9396" class="cite xref">RFC9396</a>]</span>. The following diagram depicts a wallet flow incorporating RAR. Details of how the wallet is invoked or how the presentation result reaches the authorization server are omitted for simplicity. Refer to <a href="#digital-credentials" class="auto internal xref">Appendix B.4</a> for details.<a href="#appendix-B.4.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-ascii-art art-text artwork" id="appendix-B.4.1-2">
 <pre>
 First Party Client        AS              Wallet/DC API       Verifier
@@ -3636,13 +3637,13 @@ First Party Client        AS              Wallet/DC API       Verifier
               <p id="appendix-B.4.1-3.1.1">The client initiates the OAuth request, including RAR.<a href="#appendix-B.4.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.2">
-              <p id="appendix-B.4.1-3.2.1">The AS processes that RAR from the request and creates a transaction data object from it. Details of the structure are out of scope of this specification. Depending on the use case, it is valid to map the RAR one-to-one or transform it. The AS then sends a request including the transaction data to the verifier to create a presentation request.<a href="#appendix-B.4.1-3.2.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.2.1">The authorization server processes that RAR from the request and creates a transaction data object from it. The authorization server then sends a request including the transaction data to the verifier to create a presentation request.<a href="#appendix-B.4.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.3">
               <p id="appendix-B.4.1-3.3.1">The verifier responds with the presentation request.<a href="#appendix-B.4.1-3.3.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.4">
-              <p id="appendix-B.4.1-3.4.1">The AS answers the client with the presentation request.<a href="#appendix-B.4.1-3.4.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.4.1">The authorization server responds to client with the presentation request.<a href="#appendix-B.4.1-3.4.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.5">
               <p id="appendix-B.4.1-3.5.1">The client invokes the wallet. How exactly the wallet is invoked is omitted for simplicity. See Usage with Digital Credentials <a href="#digital-credentials" class="auto internal xref">Appendix B.4</a> for details.<a href="#appendix-B.4.1-3.5.1" class="pilcrow">¶</a></p>
@@ -3651,16 +3652,16 @@ First Party Client        AS              Wallet/DC API       Verifier
               <p id="appendix-B.4.1-3.6.1">The wallet creates a vp_token including the requested transaction data and sends it to the verifier.<a href="#appendix-B.4.1-3.6.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.7">
-              <p id="appendix-B.4.1-3.7.1">The verifier verifies the vp_token and eventually the AS learns about the result. How the AS learns about the result is omitted for simplicity. See Usage with Digital Credentials <a href="#digital-credentials" class="auto internal xref">Appendix B.4</a> for details. The AS then evaluates the result, especially the transactiono data.<a href="#appendix-B.4.1-3.7.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.7.1">The verifier verifies the vp_token and eventually the authorization server learns about the result. How the authorization server learns about the result is omitted for simplicity. See Usage with Digital Credentials <a href="#digital-credentials" class="auto internal xref">Appendix B.4</a> for details. The authorization server then evaluates the result, especially the transaction data.<a href="#appendix-B.4.1-3.7.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.8">
-              <p id="appendix-B.4.1-3.8.1">The AS returns an authorization code to the client as per <a href="#native-response" class="auto internal xref">Section 5.2</a>.<a href="#appendix-B.4.1-3.8.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.8.1">The authorization server returns an authorization code to the client as per <a href="#native-response" class="auto internal xref">Section 5.2</a>.<a href="#appendix-B.4.1-3.8.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.9">
               <p id="appendix-B.4.1-3.9.1">The client redeems the code for an access token as per <a href="#token-request" class="auto internal xref">Section 6</a>.<a href="#appendix-B.4.1-3.9.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.10">
-              <p id="appendix-B.4.1-3.10.1">The AS responds to the token request as per <a href="#token-request" class="auto internal xref">Section 6</a>. It also includes the authorization_details.<a href="#appendix-B.4.1-3.10.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.10.1">The authorization server responds to the token request as per <a href="#token-request" class="auto internal xref">Section 6</a>. It also includes the authorization_details.<a href="#appendix-B.4.1-3.10.1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B.4.1-3.10.2">
 <pre>
 HTTP/1.1 200 OK
