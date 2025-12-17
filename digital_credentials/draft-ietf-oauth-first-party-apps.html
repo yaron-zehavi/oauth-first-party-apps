@@ -3445,17 +3445,20 @@ User            First Party Client        AS               Wallet/DC API        
 </li>
               <li class="normal" id="appendix-B.4-4.2.2.4">
                 <p id="appendix-B.4-4.2.2.4.1">a redirect URI intended for redirect from a wallet to the client in <span>[<a href="#OpenID4VP" class="cite xref">OpenID4VP</a>]</span> same device flows (hereafter called openid4vp_redirect_uri)<a href="#appendix-B.4-4.2.2.4.1" class="pilcrow">¶</a></p>
-<p id="appendix-B.4-4.2.2.4.2">
+<div class="alignLeft art-text artwork" id="appendix-B.4-4.2.2.4.2">
+<pre>
 POST /native-authorization HTTP/1.1
- Host: server.example.com
- Content-Type: application/x-www-form-urlencoded<a href="#appendix-B.4-4.2.2.4.2" class="pilcrow">¶</a></p>
-<p id="appendix-B.4-4.2.2.4.3">
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+
 &amp;client_id=bb16c14c73415
- &amp;scope=profile
- &amp;dc_api=false
- &amp;login_hint=wallet
- &amp;openid4vp_flow_type=same_device
- &amp;openid4vp_redirect_uri=https%3A%2F%2Fdeeplink.example.client<a href="#appendix-B.4-4.2.2.4.3" class="pilcrow">¶</a></p>
+&amp;scope=profile
+&amp;dc_api=false
+&amp;login_hint=wallet
+&amp;openid4vp_flow_type=same_device
+&amp;openid4vp_redirect_uri=https%3A%2F%2Fdeeplink.example.client
+</pre><a href="#appendix-B.4-4.2.2.4.2" class="pilcrow">¶</a>
+</div>
 </li>
             </ul>
 <p id="appendix-B.4-4.2.3">
