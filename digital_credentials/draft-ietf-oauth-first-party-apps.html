@@ -1056,7 +1056,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Parecki, et al.</td>
-<td class="center">Expires 19 June 2026</td>
+<td class="center">Expires 20 June 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1069,12 +1069,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-oauth-first-party-apps-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-16" class="published">16 December 2025</time>
+<time datetime="2025-12-17" class="published">17 December 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-06-19">19 June 2026</time></dd>
+<dd class="expires"><time datetime="2026-06-20">20 June 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ applications, only delegating to the browser in unexpected, high risk, or error 
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 20 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2614,6 +2614,10 @@ an authorization request and eventually obtain an authorization code.<a href="#s
         <dd>
 <span class="refAuthor">Fletcher, G.</span>, <span class="refTitle">"OpenID Connect Native SSO for Mobile Apps"</span>, <time datetime="2022-11" class="refDate">November 2022</time>, <span>&lt;<a href="https://openid.net/specs/openid-connect-native-sso-1_0.html">https://openid.net/specs/openid-connect-native-sso-1_0.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="OpenID4VP">[OpenID4VP]</dt>
+        <dd>
+<span class="refAuthor">Terbu, O.</span>, <span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Yasuda, K.</span>, <span class="refAuthor">Fett, D.</span>, and <span class="refAuthor">J. Heenan</span>, <span class="refTitle">"OpenID for Verifiable Presentations 1.0"</span>, <time datetime="2025-07" class="refDate">July 2025</time>, <span>&lt;<a href="https://openid.net/specs/openid-4-verifiable-presentations-1_0.html">https://openid.net/specs/openid-4-verifiable-presentations-1_0.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
@@ -3346,10 +3350,10 @@ Cache-Control: no-store
         <h3 id="name-usage-with-digital-credenti">
 <a href="#appendix-B.4" class="section-number selfRef">B.4. </a><a href="#name-usage-with-digital-credenti" class="section-name selfRef">Usage with Digital Credentials</a>
         </h3>
-<p id="appendix-B.4-1">Digital credentials (stored in wallets) can be used to authenticate a user. This example flow shows how they can be incorporated into this spec using DC API/OpenId4VP.<a href="#appendix-B.4-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.4-1">Digital credentials (stored in wallets) can be used to authenticate a user. This example flow shows how they can be incorporated into this spec using DC API/<span>[<a href="#OpenID4VP" class="cite xref">OpenID4VP</a>]</span>.<a href="#appendix-B.4-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-ascii-art art-text artwork" id="appendix-B.4-2">
 <pre>
-User            First Party Client        IdP              Wallet/DC API       Verifier
+User            First Party Client        AS               Wallet/DC API        Verifier
 ----            ------------------        ---              --------------       --------
 |                     |                  |                    |                  |
 |                     |                  |                    |                  |
@@ -3363,134 +3367,102 @@ User            First Party Client        IdP              Wallet/DC API       V
 |                     |&lt;-----------------|                    |                  |
 |                     |                  |                    |                  |
 +===================== DC API branch ============================================+
-|                     |                  |                    |                  |
-|                     | (4) DC API Capability Indication      |                  |
-|                     |-----------------&gt;|                    |                  |
-|                     |                  | (5) Create Presentation request (OIDC4VP)
-|                     |                  |--------------------------------------&gt;|
-|                     |                  | (6) Presentation request (OIDC4VP)    |
-|                     |                  |&lt;--------------------------------------|
-|                     | (7) Presentation request (OIDC4VP)    |                  |
-|                     |&lt;-----------------|                    |                  |
-|                     | (8) Presentation Request (OID4VP)     |                  |
+|                     | (4) Presentation Request (OID4VP)     |                  |
 |                     |--------------------------------------&gt;|                  |
-|                     | (9) Presentation Response (vp_token)  |                  |
+|                     | (5) Presentation Response (vp_token)  |                  |
 |                     |&lt;--------------------------------------|                  |
-|                     | (10) vp_token                         |                  |
+|                     | (6) vp_token                          |                  |
 |                     |-----------------&gt;|                    |                  |
-|                     |                  | (11) vp_token      |                  |
-|                     |                  |-------------------&gt;|                  |
-|                     |                  | (12) Verification Result              |
+|                     |                  | (7) vp_token       |                  |
+|                     |                  |--------------------------------------&gt;|
+|                     |                  | (8) Verification Result               |
 |                     |                  |&lt;--------------------------------------|
 +================================================================================+
 +=================== No DC API branch ===========================================+
-|                     |                  |                    |                  |
-| (13) Display options                   |                    |                  |
-| (same device / cross device)           |                    |                  |
-|&lt;--------------------|                  |                    |                  |
-| (14) Selects option |                  |                    |                  |
-|--------------------&gt;|                  |                    |                  |
-|                     | (15) Selected option                  |                  |
-|                     |-----------------&gt;|                    |                  |
-|                     |                  |                    |                  |
 |------- Same device path -------------------------------------------------------|
-|                     |                  | (16) Create Presentation request (OIDC4VP)
-|                     |                  |--------------------------------------&gt;|
-|                     |                  | (17) Presentation request (OIDC4VP)   |
-|                     |                  |&lt;--------------------------------------|
-|                     | (18) Presentation request (OIDC4VP)   |                  |
-|                     |&lt;-----------------|                    |                  |
-|                     | (19) Invoke Wallet via Deeplink       |                  |
+|                     | (9) Invoke Wallet via Deeplink        |                  |
 |                     |--------------------------------------&gt;|                  |
-|                     |                  |                    | (20) Presentation Response (vp_token)
+|                     |                  |                    | (10) Presentation Response (vp_token)
 |                     |                  |                    |-----------------&gt;|
-|                     |                  | (21) redirect_uri_client?handle       |
+|                     |                  | (11) redirect_uri_client?handle       |
 |                     |                  |&lt;--------------------------------------|
-|                     | (22) Redirect to client w/ redirect_uri_client?handle    |
+|                     | (12) Redirect to client w/ openid4vp_redirect_uri?handle=123
 |                     |&lt;--------------------------------------|                  |
-|                     | (23) handle                           |                  |
+|                     | (13) Handle                           |                  |
 |                     |-----------------&gt;|                    |                  |
-|                     |                  | (24) Get Presentation Result          |
+|                     |                  | (14) Get Presentation Result          |
 |                     |                  |--------------------------------------&gt;|
-|                     |                  | (25) Presentation Result              |
+|                     |                  | (15) Presentation Result              |
 |                     |                  |&lt;--------------------------------------|
-|                     |                  |                    |                  |
 |------- Cross device path ------------------------------------------------------|
-|                     |                  | (26) Create Presentation request (OIDC4VP)
-|                     |                  |--------------------------------------&gt;|
-|                     |                  | (27) Presentation request (OIDC4VP)   |
-|                     |                  |&lt;--------------------------------------|
-|                     | (28) Presentation request (OIDC4VP)   |                  |
-|                     |&lt;-----------------|                    |                  |
-| (29) Display QR Code|                  |                    |                  |
+| (16) Display QR Code|                  |                    |                  |
 |&lt;--------------------|                  |                    |                  |
-| (30) Scan QR Code   |                  |                    |                  |
+| (17) Scan QR Code   |                  |                    |                  |
 |-----------------------------------------------------------&gt;&gt;|                  |
-|                     |                  |                    | (31) Presentation Response (vp_token)
+|                     |                  |                    | (18) Presentation Response (vp_token)
 |                     |                  |                    |-----------------&gt;|
 |                     +---- Loop ------------------------------------------------+
-|                     | (32) Poll for authorization response                     |
+|                     | (19) Poll for authorization response                     |
 |                     |-----------------&gt;|                                       |
-|                     |                  | (33) Get Presentation Result          |
-|                     |                  |--------------------------------------&gt;|
-|                     |                  | (34) Pending                          |
+|                     |                  | (20) Get Presentation Result          |
+|                     |                  |&lt;-------------------------------------&gt;|
+|                     |                  | (21) Pending                          |
 |                     |                  |&lt;--------------------------------------|
-|                     | (35) Pending     |                                       |
+|                     | (22) Pending     |                                       |
 |                     |&lt;-----------------|                                       |
 |                     +---- Break when presentation done ------------------------|
-|                     |                  | (36) Presentation Result              |
+|                     |                  | (23) Presentation Result              |
 |                     |                  |&lt;--------------------------------------|
 +================================================================================+
 |                     |                  |
 |  Note: Assuming the happy path. In case of error, error responses are sent back accordingly.
 |                     |                  |
-|                     | (37) code        |
+|                     | (24) Code        |
 |                     |&lt;-----------------|
-|                     | (38) Token Request w/ code
+|                     | (25) Token Request w/ code
 |                     |-----------------&gt;|
-|                     | (39) Tokens      |
+|                     | (26) Tokens      |
 |                     |&lt;-----------------|
 |                     |                  |
 </pre><a href="#appendix-B.4-2" class="pilcrow">¶</a>
 </div>
-<p id="appendix-B.4-3">The verifier is displayed here as a separate instance, but can also be part of the IDP. In both cases, it is transparent to the client, as the client only talks to the IDP's Native Authorization Endpoint <a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a><a href="#appendix-B.4-3" class="pilcrow">¶</a></p>
+<p id="appendix-B.4-3">The verifier is displayed here as a separate instance, but can also be part of the AS. In both cases, it is transparent to the client, as the client only talks to the AS's Native Authorization Endpoint (<a href="#native-authorization-endpoint" class="auto internal xref">Section 4.1</a>).<a href="#appendix-B.4-3" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="appendix-B.4-4">
 <li id="appendix-B.4-4.1">
             <p id="appendix-B.4-4.1.1">User opens app<a href="#appendix-B.4-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.2">
-            <p id="appendix-B.4-4.2.1">The client can already indicate, as part of the Native Authorization Request <a href="#native-auth-request" class="auto internal xref">Section 5.1</a>, wallet use case + DC API support as well as SD/CD use case and a redirect URI intended for redirect from a wallet to the client in OPENID4VP same device flows (hereafter called openid4vp_redirect_uri) If not, this can be negotiated by e.g., a Additional Information Required Response <a href="#insufficient-information" class="auto internal xref">Section 5.2.2.3</a>. For example, a request using an OAuth request object which contains the mentioned indications may look as follows:<a href="#appendix-B.4-4.2.1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.4-4.2.2">
-<pre>
+            <p id="appendix-B.4-4.2.1">The client indicates, as part of the Native Authorization Request (<a href="#native-auth-request" class="auto internal xref">Section 5.1</a>), the following:<a href="#appendix-B.4-4.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-B.4-4.2.2.1">
+                <p id="appendix-B.4-4.2.2.1.1">Login via digital credentials (wallet) desired<a href="#appendix-B.4-4.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-B.4-4.2.2.2">
+                <p id="appendix-B.4-4.2.2.2.1">DC API support<a href="#appendix-B.4-4.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-B.4-4.2.2.3">
+                <p id="appendix-B.4-4.2.2.3.1">Same device/cross device (only, if DC API is not supported)<a href="#appendix-B.4-4.2.2.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-B.4-4.2.2.4">
+                <p id="appendix-B.4-4.2.2.4.1">a redirect URI intended for redirect from a wallet to the client in <span>[<a href="#OpenID4VP" class="cite xref">OpenID4VP</a>]</span> same device flows (hereafter called openid4vp_redirect_uri)<a href="#appendix-B.4-4.2.2.4.1" class="pilcrow">¶</a></p>
+<p id="appendix-B.4-4.2.2.4.2">
 POST /native-authorization HTTP/1.1
-Host: server.example.com
-Content-Type: application/x-www-form-urlencoded
-
-request=....
+ Host: server.example.com
+ Content-Type: application/x-www-form-urlencoded<a href="#appendix-B.4-4.2.2.4.2" class="pilcrow">¶</a></p>
+<p id="appendix-B.4-4.2.2.4.3">
 &amp;client_id=bb16c14c73415
-&amp;scope=...
-</pre><a href="#appendix-B.4-4.2.2" class="pilcrow">¶</a>
-</div>
+ &amp;scope=profile
+ &amp;dc_api=false
+ &amp;login_hint=wallet
+ &amp;openid4vp_flow_type=same_device
+ &amp;openid4vp_redirect_uri=https%3A%2F%2Fdeeplink.example.client<a href="#appendix-B.4-4.2.2.4.3" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 <p id="appendix-B.4-4.2.3">
-Example request object:<a href="#appendix-B.4-4.2.3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.4-4.2.4">
-<pre>
-{
-  "client_id": "...",
-  "aud": "...",
-  "scope": "...",
-  "dc_api": false,
-  "openid4vp_flow_type": "same_device",
-  "openid4vp_redirect_uri": "https://deeplink.example.client
-  // other claims
-}
-</pre><a href="#appendix-B.4-4.2.4" class="pilcrow">¶</a>
-</div>
-<p id="appendix-B.4-4.2.5">
-Note that the client must know these indicators upfront or collect this information from the user before making the initial request.<a href="#appendix-B.4-4.2.5" class="pilcrow">¶</a></p>
+Note that the client must know these indicators upfront or collect this information from the user before making the initial request.<a href="#appendix-B.4-4.2.3" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.3">
-            <p id="appendix-B.4-4.3.1">IDP returns with error response (insufficient_authorization), indicating in the response body that digital credentials are required. If sufficient information is provided in step 2, the IDP can already respond with the presentation request. In that case, the IDP would request a presentation request according to the provided information (dc_api=true/false, SD/CD). In case of dc_api=false and same device flow, the IDP might generate a handle which is linked to the presentation reques.This handle will be handed to the client as a request parameter appended to openid4vp_redirect_uri, when the verifier responds to the wallet. Alternatively, the verifier generates such a handle and returns it together with the presentation request to the IDP. See also step 22. The IDP's response may look like this:<a href="#appendix-B.4-4.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.3.1">AS returns with error response (insufficient_authorization), indicating in the response body that digital credentials are required. The AS's response may look like this:<a href="#appendix-B.4-4.3.1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B.4-4.3.2">
 <pre>
 HTTP/1.1 403 Forbidden
@@ -3501,135 +3473,53 @@ Cache-Control: no-store
   "error": "insufficient_authorization",
   "auth_session": "ce6772f5e07bc8361572f",
   "type": "digital_credentials_required",
-  "request": "openid4vp://?request_uri=..." // omitted if the IDP cannot yet return the presentation request
+  "request": "openid4vp://?request_uri=..." // omitted if the AS cannot yet return the presentation request
 }
 </pre><a href="#appendix-B.4-4.3.2" class="pilcrow">¶</a>
 </div>
 </li>
           <li id="appendix-B.4-4.4">
-            <p id="appendix-B.4-4.4.1">If the client supports the DC API, it indicates this to the IDP. This step can be ignored if step 3 already includes the presentation request.<a href="#appendix-B.4-4.4.1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.4-4.4.2">
-<pre>
-POST /native-authorization HTTP/1.1
-Host: server.example.com
-Content-Type: application/json
-
-{
-  "auth_session": "ce6772f5e07bc8361572f",
-  "dc_api": true
-}
-</pre><a href="#appendix-B.4-4.4.2" class="pilcrow">¶</a>
-</div>
+            <p id="appendix-B.4-4.4.1">Client invokes the DC API.<a href="#appendix-B.4-4.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.5">
-            <p id="appendix-B.4-4.5.1">The IDP then instructs the verifier to create a respective presentation request, which is returned through the IDP to the client. This step can be ignored if step 3 already includes the presentation request<a href="#appendix-B.4-4.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.5.1">The DC API returns the vp_token to the client<a href="#appendix-B.4-4.5.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.6">
-            <p id="appendix-B.4-4.6.1">The verifier returns the presentation request to the IDP. This step can be ignored if step 3 already includes the presentation request<a href="#appendix-B.4-4.6.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.6.1">Client sends vp_token to the AS<a href="#appendix-B.4-4.6.1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-B.4-4.6.2">
+<pre>
+ POST /native-authorization HTTP/1.1
+ Host: server.example.com
+ Content-Type: application/json
+
+ {
+   "auth_session": "ce6772f5e07bc8361572f",
+   "vp_token": "....."
+ }
+</pre><a href="#appendix-B.4-4.6.2" class="pilcrow">¶</a>
+</div>
 </li>
           <li id="appendix-B.4-4.7">
-            <p id="appendix-B.4-4.7.1">The IDP answers the client with the presentation request. This step can be ignored if step 3 already includes the presentation request<a href="#appendix-B.4-4.7.1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.4-4.7.2">
-<pre>
-HTTP/1.1 201 Created
-Content-Type: application/json
-Cache-Control: no-store
-
-{
-  "auth_session": "ce6772f5e07bc8361572f",
-  "type": "digital_credentials_required",
-  "request": "openid4vp://?request_uri=..."
-}
-</pre><a href="#appendix-B.4-4.7.2" class="pilcrow">¶</a>
-</div>
+            <p id="appendix-B.4-4.7.1">The AS asks the verifier to verify the vp_token<a href="#appendix-B.4-4.7.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.8">
-            <p id="appendix-B.4-4.8.1">Client invokes the DC API. Note that the presentation request is usually of the form openid4vp://?request_uri=... so the client has to fetch the actual request from request_uri and hand that to the DC API<a href="#appendix-B.4-4.8.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.8.1">The verifier verifies the vp_token and returns the result to the AS. The AS evaluates the verification result and returns either a code or an error as per <a href="#native-response" class="auto internal xref">Section 5.2</a>. Here we assume the happy path. Continue with step 24.<a href="#appendix-B.4-4.8.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.9">
-            <p id="appendix-B.4-4.9.1">The DC API returns the vp_token to the client<a href="#appendix-B.4-4.9.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.9.1">If DC API is NOT supported and in case of same device flow, the client invokes the Wallet through Deep Link.<a href="#appendix-B.4-4.9.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.10">
-            <p id="appendix-B.4-4.10.1">Client sends vp_token to the IDP<a href="#appendix-B.4-4.10.1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.4-4.10.2">
-<pre>
-POST /native-authorization HTTP/1.1
-Host: server.example.com
-Content-Type: application/json
-
-{
-  "auth_session": "ce6772f5e07bc8361572f",
-  "vp_token": "....."
-}
-</pre><a href="#appendix-B.4-4.10.2" class="pilcrow">¶</a>
-</div>
+            <p id="appendix-B.4-4.10.1">Wallet presents credentials to verifier.<a href="#appendix-B.4-4.10.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.11">
-            <p id="appendix-B.4-4.11.1">The IDP asks the verifier to verify the vp_token<a href="#appendix-B.4-4.11.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.11.1">Verifier responds with a URL that tells the wallet to redirect as per <span>[<a href="#OpenID4VP" class="cite xref">OpenID4VP</a>]</span>.<a href="#appendix-B.4-4.11.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.12">
-            <p id="appendix-B.4-4.12.1">The IDP evaluates the verification result and returns either a code or an error as per Native Authorization Response <a href="#native-response" class="auto internal xref">Section 5.2</a>. Here we assume the happy path. Continue with step 37<a href="#appendix-B.4-4.12.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.4-4.12.1">Wallet redirects back to the client by treating the received URL as a Deep Link.<a href="#appendix-B.4-4.12.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-B.4-4.13">
-            <p id="appendix-B.4-4.13.1">If DC API is NOT supported, the client prompts the user whether they want to use a wallet on the same or another device. This step can be ignored if step 3 already includes the presentation request.<a href="#appendix-B.4-4.13.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="appendix-B.4-4.14">
-            <p id="appendix-B.4-4.14.1">The user chooses. This step can be ignored if step 3 already includes the presentation request.<a href="#appendix-B.4-4.14.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="appendix-B.4-4.15">
-            <p id="appendix-B.4-4.15.1">The client indicates to IDP that DC API is unsupported, the user's choice and, for same device, the openid4vp_redirect_uri. This step can be ignored if step 3 already includes the presentation request.<a href="#appendix-B.4-4.15.1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.4-4.15.2">
-<pre>
-POST /native-authorization HTTP/1.1
-Host: server.example.com
-Content-Type: application/json
-
-{
-  "auth_session": "ce6772f5e07bc8361572f",
-  "dc_api": false,
-  "device_flow_type": "same_device",
-  "openid4vp_redirect_uri": "..."
-}
-</pre><a href="#appendix-B.4-4.15.2" class="pilcrow">¶</a>
-</div>
-</li>
-          <li id="appendix-B.4-4.16">
-            <p id="appendix-B.4-4.16.1">In case of same device, the IDP requests a presentation request from the verifier. The IDP might generate a handle which is linked to the presentation reques. This handle will be handed to the client as a request parameter appended to openid4vp_redirect_uri, when the verifier responds to the wallet (step 21). Alternatively, the verifier generates such a handle and returns it together with the presentation request to the IDP. This step can be ignored if step 3 already includes the presentation request.<a href="#appendix-B.4-4.16.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="appendix-B.4-4.17">
-            <p id="appendix-B.4-4.17.1">The verifier responds to the IDP with the presentation request. If the verifier generated the handle, this handle is also contained in the response. This step can be ignored if step 3 already includes the presentation request.<a href="#appendix-B.4-4.17.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="appendix-B.4-4.18">
-            <p id="appendix-B.4-4.18.1">The IDP answers the client with the presentation request. This step can be ignored if step 3 already includes the presentation request.<a href="#appendix-B.4-4.18.1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.4-4.18.2">
-<pre>
-HTTP/1.1 201 Created
-Content-Type: application/json
-Cache-Control: no-store
-
-{
-  "auth_session": "ce6772f5e07bc8361572f",
-  "type": "digital_credentials_required",
-  "request": "openid4vp://?request_uri=..."
-}
-</pre><a href="#appendix-B.4-4.18.2" class="pilcrow">¶</a>
-</div>
-</li>
-          <li id="appendix-B.4-4.19">
-            <p id="appendix-B.4-4.19.1">Client invokes Wallet through Deep Link. Note that the presentation request is usually of the form openid4vp://?request_uri=...<a href="#appendix-B.4-4.19.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="appendix-B.4-4.20">
-            <p id="appendix-B.4-4.20.1">Wallet presents credentials to verifier.<a href="#appendix-B.4-4.20.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="appendix-B.4-4.21">
-            <p id="appendix-B.4-4.21.1">Verifier responds with a URL that tells the wallet to redirect. This is part of OpenId4VP. This redirect_uri is the openid4vp_redirect_uri mentioned in previous steps. The verifier either simply returns the openid4vp_redirect_uri it received earlier, or it appends the handle to it, which it has generated together with the presentation request. This behaviour depends on the verifier's implementation. Step 3 or step 16 describe this as well.<a href="#appendix-B.4-4.21.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="appendix-B.4-4.22">
-            <p id="appendix-B.4-4.22.1">Wallet redirects back to the client by treating the received URL as a Deep Link.<a href="#appendix-B.4-4.22.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="appendix-B.4-4.23">
-            <p id="appendix-B.4-4.23.1">Client extracts the handle from the received URL and hands it off to the IDP. Note that this handle is either generated by the verifier or handed to it in step 16 as part of openid4vp_redirect_uri.<a href="#appendix-B.4-4.23.1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.4-4.23.2">
+            <p id="appendix-B.4-4.13.1">Client extracts the handle from the received URL and hands it off to the AS.<a href="#appendix-B.4-4.13.1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-B.4-4.13.2">
 <pre>
 POST /native-authorization HTTP/1.1
 Host: server.example.com
@@ -3639,36 +3529,27 @@ Content-Type: application/json
   "auth_session": "ce6772f5e07bc8361572f",
   "presentation_id" : "87248924n2f"
 }
-</pre><a href="#appendix-B.4-4.23.2" class="pilcrow">¶</a>
+</pre><a href="#appendix-B.4-4.13.2" class="pilcrow">¶</a>
 </div>
 </li>
-          <li id="appendix-B.4-4.24">
-            <p id="appendix-B.4-4.24.1">The IDP uses the handle it received from the client to look up the presentation and retrieve the result.<a href="#appendix-B.4-4.24.1" class="pilcrow">¶</a></p>
+          <li id="appendix-B.4-4.14">
+            <p id="appendix-B.4-4.14.1">The AS uses the handle to look up the presentation and retrieve the result.<a href="#appendix-B.4-4.14.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="appendix-B.4-4.25">
-            <p id="appendix-B.4-4.25.1">The IDP evaluates the verification result and returns either a code or an error as per Native Authorization Response <a href="#native-response" class="auto internal xref">Section 5.2</a>. Here we assume the happy path. Continue with step 37.<a href="#appendix-B.4-4.25.1" class="pilcrow">¶</a></p>
+          <li id="appendix-B.4-4.15">
+            <p id="appendix-B.4-4.15.1">The verifier responds with the presentation result which the AS evaluates. The AS then returns either a code or an error as per <a href="#native-response" class="auto internal xref">Section 5.2</a>. Here we assume the happy path. Continue with step 24.<a href="#appendix-B.4-4.15.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="appendix-B.4-4.26">
-            <p id="appendix-B.4-4.26.1">In case of cross device, the IDP requests a presentation request from the verifier WITHOUT passing/referencing an openid4vp_redirect_uri. This step can be ignored if step 3 already includes the presentation request.<a href="#appendix-B.4-4.26.1" class="pilcrow">¶</a></p>
+          <li id="appendix-B.4-4.16">
+            <p id="appendix-B.4-4.16.1">If DC API is NOT supported and in case of cross device, the client renders the presentation request as QR code and displays it to the user.<a href="#appendix-B.4-4.16.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="appendix-B.4-4.27">
-            <p id="appendix-B.4-4.27.1">The verifier responds to the IDP with the presentation request. This step can be ignored if step 3 already includes the presentation request. This step can be ignored if step 3 already includes the presentation request.<a href="#appendix-B.4-4.27.1" class="pilcrow">¶</a></p>
+          <li id="appendix-B.4-4.17">
+            <p id="appendix-B.4-4.17.1">The user scans the QR code with the wallet.<a href="#appendix-B.4-4.17.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="appendix-B.4-4.28">
-            <p id="appendix-B.4-4.28.1">The IDP answers the client with the presentation request (see step 18 for an example response). This step can be ignored if step 3 already includes the presentation request.<a href="#appendix-B.4-4.28.1" class="pilcrow">¶</a></p>
+          <li id="appendix-B.4-4.18">
+            <p id="appendix-B.4-4.18.1">The wallet presents the credentials to the verifier.<a href="#appendix-B.4-4.18.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="appendix-B.4-4.29">
-            <p id="appendix-B.4-4.29.1">The client renders the presentation request as QR code and displays it to the user. Note that the presentation request is usually of the form openid4vp://?request_uri=...<a href="#appendix-B.4-4.29.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="appendix-B.4-4.30">
-            <p id="appendix-B.4-4.30.1">The user scans the QR code with the wallet.<a href="#appendix-B.4-4.30.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="appendix-B.4-4.31">
-            <p id="appendix-B.4-4.31.1">The wallet presents the credentials to the verifier.<a href="#appendix-B.4-4.31.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="appendix-B.4-4.32">
-            <p id="appendix-B.4-4.32.1">While displaying the QR code, the client polls the IDP for the presentation status until it receives a non-pending result.<a href="#appendix-B.4-4.32.1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.4-4.32.2">
+          <li id="appendix-B.4-4.19">
+            <p id="appendix-B.4-4.19.1">While displaying the QR code, the client polls the AS for the presentation status until it receives a non-pending result.<a href="#appendix-B.4-4.19.1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-B.4-4.19.2">
 <pre>
 POST /native-authorization HTTP/1.1
 Host: server.example.com
@@ -3677,18 +3558,18 @@ Content-Type: application/json
 {
   "auth_session": "ce6772f5e07bc8361572f"
 }
-</pre><a href="#appendix-B.4-4.32.2" class="pilcrow">¶</a>
+</pre><a href="#appendix-B.4-4.19.2" class="pilcrow">¶</a>
 </div>
 </li>
-          <li id="appendix-B.4-4.33">
-            <p id="appendix-B.4-4.33.1">The IDP in turn retreives the presentation status from the verifier.<a href="#appendix-B.4-4.33.1" class="pilcrow">¶</a></p>
+          <li id="appendix-B.4-4.20">
+            <p id="appendix-B.4-4.20.1">The AS in turn retreives the presentation status from the verifier.<a href="#appendix-B.4-4.20.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="appendix-B.4-4.34">
-            <p id="appendix-B.4-4.34.1">The verifier responds to the IDP that the presentation result is not yet ready.<a href="#appendix-B.4-4.34.1" class="pilcrow">¶</a></p>
+          <li id="appendix-B.4-4.21">
+            <p id="appendix-B.4-4.21.1">The verifier responds to the AS that the presentation result is not yet ready.<a href="#appendix-B.4-4.21.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="appendix-B.4-4.35">
-            <p id="appendix-B.4-4.35.1">The IDP responds to the client that the presentation result is not yet ready.<a href="#appendix-B.4-4.35.1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.4-4.35.2">
+          <li id="appendix-B.4-4.22">
+            <p id="appendix-B.4-4.22.1">The AS responds to the client that the presentation result is not yet ready.<a href="#appendix-B.4-4.22.1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-B.4-4.22.2">
 <pre>
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -3698,20 +3579,20 @@ Cache-Control: no-store
   "auth_session": "ce6772f5e07bc8361572f",
   "status": "pending"
 }
-</pre><a href="#appendix-B.4-4.35.2" class="pilcrow">¶</a>
+</pre><a href="#appendix-B.4-4.22.2" class="pilcrow">¶</a>
 </div>
 </li>
-          <li id="appendix-B.4-4.36">
-            <p id="appendix-B.4-4.36.1">Once the presentation is done, the verifier returns the result to the IDP. The IDP then evaluates the verification result and returns either a code or an error as per Native Authorization Response <a href="#native-response" class="auto internal xref">Section 5.2</a>, breaking the loop. Here we assume the happy path. Continue with step 37.<a href="#appendix-B.4-4.36.1" class="pilcrow">¶</a></p>
+          <li id="appendix-B.4-4.23">
+            <p id="appendix-B.4-4.23.1">Once the presentation is done, the verifier returns the result to the AS. The AS then evaluates the verification result and returns either a code or an error as per <a href="#native-response" class="auto internal xref">Section 5.2</a>, breaking the loop. Here we assume the happy path. Continue with step 24.<a href="#appendix-B.4-4.23.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="appendix-B.4-4.37">
-            <p id="appendix-B.4-4.37.1">The IDP returns an authorization code to the client as per Native Authorization Response <a href="#native-response" class="auto internal xref">Section 5.2</a>.<a href="#appendix-B.4-4.37.1" class="pilcrow">¶</a></p>
+          <li id="appendix-B.4-4.24">
+            <p id="appendix-B.4-4.24.1">The AS returns an authorization code to the client as per <a href="#native-response" class="auto internal xref">Section 5.2</a>.<a href="#appendix-B.4-4.24.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="appendix-B.4-4.38">
-            <p id="appendix-B.4-4.38.1">The client redeems the code for an access token as per Token Request <a href="#token-request" class="auto internal xref">Section 6</a>.<a href="#appendix-B.4-4.38.1" class="pilcrow">¶</a></p>
+          <li id="appendix-B.4-4.25">
+            <p id="appendix-B.4-4.25.1">The client redeems the code for an access token as per <a href="#token-request" class="auto internal xref">Section 6</a>.<a href="#appendix-B.4-4.25.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="appendix-B.4-4.39">
-            <p id="appendix-B.4-4.39.1">The IDP responds to the token request as per as per Token Request <a href="#token-request" class="auto internal xref">Section 6</a>.<a href="#appendix-B.4-4.39.1" class="pilcrow">¶</a></p>
+          <li id="appendix-B.4-4.26">
+            <p id="appendix-B.4-4.26.1">The AS responds to the token request as per <a href="#token-request" class="auto internal xref">Section 6</a>.<a href="#appendix-B.4-4.26.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <div id="rar-transaction-data">
@@ -3719,10 +3600,10 @@ Cache-Control: no-store
           <h4 id="name-rar-transaction-data">
 <a href="#appendix-B.4.1" class="section-number selfRef">B.4.1. </a><a href="#name-rar-transaction-data" class="section-name selfRef">RAR &amp; Transaction Data</a>
           </h4>
-<p id="appendix-B.4.1-1">OpenId4VP supports transaction data, which is additional data that is signed and presented together with the requested credentials. This can be mapped to OAuth's RAR. The following diagram depicts a wallet flow incorporating RAR. Details of how the wallet is invoked or how the presentation result reaches the IDP are omitted for simplicity. Refer to Usage with Digital Credentials <a href="#digital-credentials" class="auto internal xref">Appendix B.4</a> for details.<a href="#appendix-B.4.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.4.1-1"><span>[<a href="#OpenID4VP" class="cite xref">OpenID4VP</a>]</span> supports transaction data, which is additional data that is signed and presented together with the requested credentials. This can be mapped to OAuth's RAR. The following diagram depicts a wallet flow incorporating RAR. Details of how the wallet is invoked or how the presentation result reaches the AS are omitted for simplicity. Refer to <a href="#digital-credentials" class="auto internal xref">Appendix B.4</a> for details.<a href="#appendix-B.4.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-ascii-art art-text artwork" id="appendix-B.4.1-2">
 <pre>
-First Party Client        IdP              Wallet/DC API       Verifier
+First Party Client        AS              Wallet/DC API       Verifier
 ------------------        ---              --------------       --------
 |                          |                    |                  |
 | (1) Native Authorization Request w/ RAR       |                  |
@@ -3749,34 +3630,34 @@ First Party Client        IdP              Wallet/DC API       Verifier
 </div>
 <ol start="1" type="1" class="normal type-1" id="appendix-B.4.1-3">
 <li id="appendix-B.4.1-3.1">
-              <p id="appendix-B.4.1-3.1.1">The client initiates the OAtuh request, including RAR.<a href="#appendix-B.4.1-3.1.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.1.1">The client initiates the OAuth request, including RAR.<a href="#appendix-B.4.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.2">
-              <p id="appendix-B.4.1-3.2.1">The IDP processes that RAR from the request and creates a transaction data object from it. Details of the structure are out of scope of this specification. Depending on the use case, it is valid to map the RAR one-to-one or transform it. The IDP then sends a request including the transaction data to the verifier to create a presentation request.<a href="#appendix-B.4.1-3.2.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.2.1">The AS processes that RAR from the request and creates a transaction data object from it. Details of the structure are out of scope of this specification. Depending on the use case, it is valid to map the RAR one-to-one or transform it. The AS then sends a request including the transaction data to the verifier to create a presentation request.<a href="#appendix-B.4.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.3">
               <p id="appendix-B.4.1-3.3.1">The verifier responds with the presentation request.<a href="#appendix-B.4.1-3.3.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.4">
-              <p id="appendix-B.4.1-3.4.1">The IDP answers the client with the presentation request.<a href="#appendix-B.4.1-3.4.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.4.1">The AS answers the client with the presentation request.<a href="#appendix-B.4.1-3.4.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.5">
-              <p id="appendix-B.4.1-3.5.1">The client invokes the wallet. How exactly the wallet is invoked is omitted simplicity. See Usage with Digital Credentials <a href="#digital-credentials" class="auto internal xref">Appendix B.4</a> for details.<a href="#appendix-B.4.1-3.5.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.5.1">The client invokes the wallet. How exactly the wallet is invoked is omitted for simplicity. See Usage with Digital Credentials <a href="#digital-credentials" class="auto internal xref">Appendix B.4</a> for details.<a href="#appendix-B.4.1-3.5.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.6">
               <p id="appendix-B.4.1-3.6.1">The wallet creates a vp_token including the requested transaction data and sends it to the verifier.<a href="#appendix-B.4.1-3.6.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.7">
-              <p id="appendix-B.4.1-3.7.1">The verifier verifies the vp_token and eventually the IDP learns about the result. How the IDP learns about the result is omitted for simplicity. See Usage with Digital Credentials <a href="#digital-credentials" class="auto internal xref">Appendix B.4</a> for details. The IDP then evaluates the result, especially the transactino data.<a href="#appendix-B.4.1-3.7.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.7.1">The verifier verifies the vp_token and eventually the AS learns about the result. How the AS learns about the result is omitted for simplicity. See Usage with Digital Credentials <a href="#digital-credentials" class="auto internal xref">Appendix B.4</a> for details. The AS then evaluates the result, especially the transactiono data.<a href="#appendix-B.4.1-3.7.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.8">
-              <p id="appendix-B.4.1-3.8.1">The IDP returns an authorization code to the client as per Native Authorization Response <a href="#native-response" class="auto internal xref">Section 5.2</a>.<a href="#appendix-B.4.1-3.8.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.8.1">The AS returns an authorization code to the client as per <a href="#native-response" class="auto internal xref">Section 5.2</a>.<a href="#appendix-B.4.1-3.8.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.9">
-              <p id="appendix-B.4.1-3.9.1">The client redeems the code for an access token as per Token Request <a href="#token-request" class="auto internal xref">Section 6</a>.<a href="#appendix-B.4.1-3.9.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.9.1">The client redeems the code for an access token as per <a href="#token-request" class="auto internal xref">Section 6</a>.<a href="#appendix-B.4.1-3.9.1" class="pilcrow">¶</a></p>
 </li>
             <li id="appendix-B.4.1-3.10">
-              <p id="appendix-B.4.1-3.10.1">The IDP responds to the token request as per as per Token Request <a href="#token-request" class="auto internal xref">Section 6</a>. It also includes the athorization_details.<a href="#appendix-B.4.1-3.10.1" class="pilcrow">¶</a></p>
+              <p id="appendix-B.4.1-3.10.1">The AS responds to the token request as per <a href="#token-request" class="auto internal xref">Section 6</a>. It also includes the authorization_details.<a href="#appendix-B.4.1-3.10.1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-B.4.1-3.10.2">
 <pre>
 HTTP/1.1 200 OK
@@ -3819,8 +3700,6 @@ Cache-Control: no-store
 }
 </pre><a href="#appendix-B.4.1-3.10.2" class="pilcrow">¶</a>
 </div>
-<p id="appendix-B.4.1-3.10.3">
-It's valid to also return a refresh token. In that case, when refreshing the access token, the client can send different authorization details. These would usually be a subset of the authorization details requested in the initial request (more on this in <span>[<a href="#RFC9396" class="cite xref">RFC9396</a>]</span>). Due to the nature of those refresh-requests, no wallet would be invoked and as such no transaction data created.<a href="#appendix-B.4.1-3.10.3" class="pilcrow">¶</a></p>
 </li>
           </ol>
 </section>
